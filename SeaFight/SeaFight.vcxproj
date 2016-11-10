@@ -146,6 +146,39 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Font.cpp" />
+    <ClCompile Include="Engine\Graphics.cpp" />
+    <ClCompile Include="Engine\Network.cpp" />
+    <ClCompile Include="Engine\SDLApplication.cpp" />
+    <ClCompile Include="Engine\TcpClient.cpp" />
+    <ClCompile Include="Engine\Texture.cpp" />
+    <ClCompile Include="Engine\Thread.cpp" />
+    <ClCompile Include="Game\Game.cpp" />
+    <ClCompile Include="Game\main.cpp" />
+    <ClCompile Include="Game\Player.cpp" />
+    <ClCompile Include="Game\ReceiveThread.cpp" />
+    <ClCompile Include="Game\Scene.cpp" />
+    <ClCompile Include="Game\Scenes\MainMenuScene.cpp" />
+    <ClCompile Include="Game\Scenes\PlaceShipScene.cpp" />
+    <ClCompile Include="Game\Scenes\PlayScene.cpp" />
+    <ClCompile Include="Game\Ship.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Engine\Font.h" />
+    <ClInclude Include="Engine\Graphics.h" />
+    <ClInclude Include="Engine\Network.h" />
+    <ClInclude Include="Engine\SDLApplication.h" />
+    <ClInclude Include="Engine\TcpClient.h" />
+    <ClInclude Include="Engine\Texture.h" />
+    <ClInclude Include="Engine\Thread.h" />
+    <ClInclude Include="Game\Game.h" />
+    <ClInclude Include="Game\Player.h" />
+    <ClInclude Include="Game\ReceiveThread.h" />
+    <ClInclude Include="Game\Scene.h" />
+    <ClInclude Include="Game\Scenes\MainMenuScene.h" />
+    <ClInclude Include="Game\Scenes\PlaceShipScene.h" />
+    <ClInclude Include="Game\Scenes\PlayScene.h" />
+    <ClInclude Include="Game\Ship.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
