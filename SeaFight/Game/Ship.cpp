@@ -15,14 +15,13 @@ Ship::Ship(int length, SDL_Point pos, Direction dir):
 
 bool Ship::collidedWith(const Ship &ship) const
 {
-	//FIX: проверка столкновений
 	SDL_Point p[3];
 	p[1].x = pos_.x - DIR[dir_][0];
 	p[1].y = pos_.y - DIR[dir_][1];
-	p[0].x = p[1].x + DIR[static_cast<Direction>(dir_ - 1)][0];
-	p[0].y = p[1].y + DIR[static_cast<Direction>(dir_ - 1)][1];
-	p[2].x = p[1].x + DIR[static_cast<Direction>(dir_ + 1)][0];
-	p[2].y = p[1].y + DIR[static_cast<Direction>(dir_ + 1)][1];
+	p[0].x = p[1].x + DIR[static_cast<Direction>((dir_ - 1 + 4) % 4)][0];
+	p[0].y = p[1].y + DIR[static_cast<Direction>((dir_ - 1 + 4) % 4)][1];
+	p[2].x = p[1].x + DIR[static_cast<Direction>((dir_ + 1) % 4)][0];
+	p[2].y = p[1].y + DIR[static_cast<Direction>((dir_ + 1) % 4)][1];
 
 	for (int i = -1; i < length_+1; ++i)
 	{
@@ -54,13 +53,12 @@ int Ship::deckAt(SDL_Point coord) const
 
 SDL_Point Ship::deckCoord(int deck) const
 {
-	SDL_Point p = pos_;
-	for (int i = 0; i < deck; ++i)
-	{
-		p.x += DIR[dir_][0];
-		p.y += DIR[dir_][1];
-	}
-	return p;
+	/*SDL_Point p = pos_;
+
+	p.x += DIR[dir_][0] * deck;
+	p.y += DIR[dir_][1] * deck;
+*/
+	return SDL_Point{ pos_.x + DIR[dir_][0] * deck, pos_.y + DIR[dir_][1] * deck };
 }
 
 void Ship::resetDamage()
