@@ -10,8 +10,7 @@ class Graphics;
 class Player
 {
 public:
-	enum ShotType { NONE, HIT, MISS };
-	enum { CELL_SIZE = 24 };
+	enum ShotType { NONE = 0, HIT, MISS };
 	Player();
 	
 	bool checkShipPosition(const Ship &) const;
@@ -25,6 +24,7 @@ public:
 	string mapData() const;
 
 	void setDrawOffset(int x, int y);
+	SDL_Point coordAt(SDL_Point p);
 	void draw(Graphics & g);
 private:
 	std::vector<Ship> ships_;

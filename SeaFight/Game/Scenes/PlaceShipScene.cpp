@@ -1,6 +1,7 @@
 #include "PlaceShipScene.h"
 #include "../Game.h"
 #include <iostream>
+#include "../Ship.h"
 
 PlaceShipScene::PlaceShipScene(Game &game):
 	Scene(game)
@@ -42,8 +43,17 @@ void PlaceShipScene::OnClick(SDL_Point p)
 {
 	Scene::OnClick(p);
 
-
 	Player &player = game().player();
+	Ship newShip(rand() % 4 + 1, player.coordAt(p), static_cast<Ship::Direction>(rand() % 4));
+
+	if (player.checkShipPosition(newShip))
+	{
+		player.addShip(newShip);
+	}
+	else
+		std::cout << "Cann't place " << newShip.length() << "decks ship at (" << newShip.x() << ", " << newShip.y() << ")\n";
+
+
 //TODO: добавление кораблей
 //	SDL_Point coord;
 // 	if (player.MapCoordAt(p, coord))

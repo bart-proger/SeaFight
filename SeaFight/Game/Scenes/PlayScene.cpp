@@ -23,19 +23,15 @@ double angle = 0;
 void PlayScene::Draw(Graphics &g)
 {
 	Scene::Draw(g);
-/*
 
-	game().playerField().Draw(g);
-	game().enemyField().Draw(g);
-*/
+	game().player().draw(g);
+	game().enemy().draw(g);
 
-	switch (game().state())
+	if (game().state() == Game::WaitEnemy)
 	{
-		case Game::WaitEnemy:
-			g.DrawSprite("wait_enemy", 415, 110, angle);
-			if ((angle += 2) >= 360)
-				angle -= 360;
-			break;
+		g.DrawSprite("wait_enemy", 415, 110, angle);
+		if ((angle += 2) >= 360)
+			angle -= 360;
 	}
 }
 
@@ -43,17 +39,14 @@ void PlayScene::OnClick(SDL_Point p)
 {
 	Scene::OnClick(p);
 
-	switch (game().state())
+	if (game().state() == Game::MyStep)
 	{
-		case Game::MyStep:;
-/*
-			PlayerField &enemy = game().enemyField();
-			SDL_Point coord;
-			if (enemy.MapCoordAt(p, coord))
-			{
-				game().fire(coord);
-				std::clog << "fire to {" << coord.x << ", " << coord.y << "}" << std::endl;
-			}
-			break;*/
+		Player &enemy = game().enemy();
+		SDL_Point coord = enemy.coordAt(p);
+		if (coord.x > -1 && coord.y > -1)
+		{
+			game().fire(coord);
+			std::clog << "fire to (" << coord.x << ", " << coord.y << ") ===> ";
+		}
 	}
 }

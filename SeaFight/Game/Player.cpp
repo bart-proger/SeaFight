@@ -2,10 +2,13 @@
 #include "Game.h"
 #include <sstream>
 #include "../Engine/Graphics.h"
-
+#include <cstdlib>
+#include <ctime>
 
 Player::Player()
 {
+	srand(time(NULL));
+	clearEnemyShots();
 }
 
 bool Player::checkShipPosition(const Ship &ship) const
@@ -76,7 +79,12 @@ string Player::mapData() const
 
 	for (auto s : ships_)
 	{
-		data[s.y() * 10 + s.x()] = '1';
+		SDL_Point p;
+		for (int i = 0; i < s.length(); ++i)
+		{
+			p = s.deckCoord(i);
+			data[p.y * 10 + p.x] = '1';
+		}
 	}
 	return string(data);
 }
@@ -87,9 +95,26 @@ void Player::setDrawOffset(int x, int y)
 	drawOffset_.y = y;
 }
 
+SDL_Point Player::coordAt(SDL_Point p)
+{
+	int x = (p.x - drawOffset_.x) / Ship::DECK_SIZE,
+		y = (p.y - drawOffset_.y) / Ship::DECK_SIZE;
+
+	if (x >= 0 && x < 10 && y >= 0 && y < 10)
+	{
+		return SDL_Point{ x, y };
+	}
+	return SDL_Point{ -1, -1 };
+}
+
 void Player::draw(Graphics & g)
 {
 	g.DrawSprite("sea", drawOffset_.x, drawOffset_.y);
+
+	for (auto s : ships_)
+	{
+		s.draw(g, drawOffset_);
+	}
 
 	for (int j = 0; j < 10; ++j)
 		for (int i = 0; i < 10; ++i)
@@ -97,10 +122,10 @@ void Player::draw(Graphics & g)
 			switch (enemyShots_[j][i])
 			{
 				case HIT:
-					g.DrawSprite("hit", i*CELL_SIZE + drawOffset_.x, j*CELL_SIZE + drawOffset_.y);
+					g.DrawSprite("hit", i*Ship::DECK_SIZE + drawOffset_.x, j*Ship::DECK_SIZE + drawOffset_.y);
 					break;
 				case MISS:
-					g.DrawSprite("miss", i*CELL_SIZE + drawOffset_.x, j*CELL_SIZE + drawOffset_.y);
+					g.DrawSprite("miss", i*Ship::DECK_SIZE + drawOffset_.x, j*Ship::DECK_SIZE + drawOffset_.y);
 					break;
 				default:
 					break;

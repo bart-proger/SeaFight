@@ -1,5 +1,6 @@
 #pragma once
 #include "../Scene.h"
+#include "../Ship.h"
 
 class PlaceShipScene : public Scene
 {
@@ -14,5 +15,7 @@ private:
 	static void GoFight_Click(Scene &);
 
 	void OnClick(SDL_Point ) override;
+
+	//Ship newShip;
 };
 
