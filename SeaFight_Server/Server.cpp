@@ -6,7 +6,7 @@
 
 Server::Server():
 	readyPlayer_(NULL),
-	inputThread_(*this)
+	consoleInputThread_(*this)
 {
 }
 
@@ -22,11 +22,11 @@ void Server::Run()
 {
 	Player* connectedPlayer = new Player(this);
 
-	inputThread_.StartThread();
+	consoleInputThread_.StartThread();
 
 	while (listener_.Accept(connectedPlayer->client()))
 	{
-		RemoveDisconnectedPlayers();
+		removeDisconnectedPlayers();
 
 		players_.push_back(connectedPlayer);
 		std::cout << "New connection...\n";
@@ -51,14 +51,14 @@ void Server::setReadyPlayer(Player* value)
 	//unlock
 }
 
-void Server::RemoveDisconnectedPlayers()
+void Server::removeDisconnectedPlayers()
 {
-	players_.erase(std::remove_if(players_.begin(), players_.end(), IsDisconnected), players_.end());
+	players_.erase(std::remove_if(players_.begin(), players_.end(), isDisconnected), players_.end());
 }
 
-bool Server::IsDisconnected(Player* p)
+bool Server::isDisconnected(Player* p)
 {
-	return p->IsDisconnected();
+	return p->isDisconnected();
 }
 
 void Server::Quit()

@@ -26,8 +26,8 @@ public:
 // 	void setState(PlayState );
 // 	PlayState state() const;
 
-	bool IsDisconnected() const;
-	bool IsReadyPlay() const;
+	bool isDisconnected() const;
+	bool readyPlay() const;
 
 //	Cell & map(int x, int y);
 	void InitMap(string data);
@@ -35,7 +35,7 @@ public:
 
 private:
 	void ParseCommand(string cmd);
-	void Fire(int x, int y);
+	void fire(int x, int y);
 	void PlayEnemy();
 	void WaitNextEnemy();
 	void StartBattle();
@@ -50,6 +50,7 @@ private:
 	PlayState state_;
 	string name_;
 	//TODO: player name & etc...
+	bool shipKilledAt(int x, int y);
 };
 
 #define CMD_FIRST		">first"
@@ -58,6 +59,8 @@ private:
 #define CMD_GET_HIT		">get_hit"	//:x:y
 #define CMD_MISS		">miss"
 #define CMD_GET_MISS	">get_miss"	//:x:y
+#define CMD_KILL		">kill"
+#define CMD_GET_KILL	">get_kill"
 #define CMD_ENEMY_DISCONNECTED ">enemy_disconnected"
 
 #define CMD_READY_PLAY	">map"	//:01001101...

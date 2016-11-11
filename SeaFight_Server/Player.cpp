@@ -39,7 +39,7 @@ Player::~Player()
 // 	return state_;
 // }
 // 
-bool Player::IsReadyPlay() const
+bool Player::readyPlay() const
 {
 	return (state_ == PlayState::ReadyPlay);
 }
@@ -49,7 +49,7 @@ WinTcpClient & Player::client()
 	return client_;
 }
 
-bool Player::IsDisconnected() const
+bool Player::isDisconnected() const
 {
 	return (state_ == PlayState::Disconnected);
 }
@@ -67,10 +67,10 @@ bool Player::IsDisconnected() const
 
 void Player::InitMap(string data)
 {
-	for (int y = 0; y < 10; ++y)
-		for (int x = 0; x < 10; ++x)
+	for (int y = 0; y < MAP_HEIGHT; ++y)
+		for (int x = 0; x < MAP_WIDTH; ++x)
 		{
-			if (data[y*10 + x] == '1')
+			if (data[y*MAP_WIDTH + x] == '1')
 				map_[y][x].hasShip = true;
 		}
 }
@@ -85,26 +85,36 @@ void Player::ClearMap()
 		}
 }
 
-void Player::Fire(int x, int y)
+void Player::fire(int x, int y)
 {
 	std::stringstream ssArgs;
 	ssArgs << ":" << x << ":" << y;
 
-	enemy_->map_[y][x].attacked = true;
-
-	if (enemy_->map_[y][x].hasShip)	// hit
+	if (enemy_->map_[y][x].hasShip && !enemy_->map_[y][x].attacked)
 	{
-		client_.Send(CMD_HIT + ssArgs.str());
-		enemy_->client().Send(CMD_GET_HIT + ssArgs.str());
+		enemy_->map_[y][x].attacked = true;
+
+		if (enemy_->shipKilledAt(x, y))		// kill
+		{
+			client_.Send(CMD_KILL + ssArgs.str());
+			enemy_->client().Send(CMD_GET_KILL + ssArgs.str());
+			std::cout << name_ << " -KILL ship " << ssArgs.str() << std::endl;
+		}
+		else					// hit
+		{
+			client_.Send(CMD_HIT + ssArgs.str());
+			enemy_->client().Send(CMD_GET_HIT + ssArgs.str());
+			std::cout << name_ << " -HIT ship " << ssArgs.str() << std::endl;
+		}
 	}
-	else                            // miss
+	else						// miss
 	{
 		client_.Send(CMD_MISS + ssArgs.str());	
 		enemy_->client().Send(CMD_GET_MISS + ssArgs.str());
+		std::cout << name_ << " -MISS ship " << ssArgs.str() << std::endl;
 
 		PlayEnemy();
 	}
-	//TODO: kill/get_kill
 }
 
 void Player::PlayEnemy()
@@ -189,7 +199,7 @@ void Player::ParseCommand(string cmd)
 	}
 	else if (state_ == PlayState::MyStep && args[0] == CMD_FIRE)
 	{
-		Fire(atoi(args[1].c_str()), atoi(args[2].c_str()));
+		fire(atoi(args[1].c_str()), atoi(args[2].c_str()));
 	}
 }
 
@@ -221,4 +231,52 @@ void Player::Process()				//------- ReceiveThread
 		enemy_->state_ = PlayState::Connected;
 	}
 	std::cout << name_ << " disconnected\n";
+}
+
+bool Player::shipKilledAt(int x, int y)
+{
+	int xx, yy;
+	// поиск соседних подбитых палуб корабля по горизонтали
+	for (xx = x - 1; xx >= 0; --xx)
+	{
+		if (map_[y][xx].hasShip)
+		{
+			if (!map_[y][xx].attacked)
+				return false;
+		}
+		else
+			break;
+	}
+	for (xx = x + 1; xx < MAP_WIDTH; ++xx)
+	{
+		if (map_[y][xx].hasShip)
+		{
+			if (!map_[y][xx].attacked)
+				return false;
+		}
+		else
+			break;
+	}
+	// ..по вертикали
+	for (yy = y - 1; yy >= 0; --yy)
+	{
+		if (map_[yy][x].hasShip)
+		{
+			if (!map_[yy][x].attacked)
+				return false;
+		}
+		else
+			break;
+	}
+	for (yy = y + 1; yy < MAP_HEIGHT; ++yy)
+	{
+		if (map_[yy][x].hasShip)
+		{
+			if (!map_[yy][x].attacked)
+				return false;
+		}
+		else
+			break;
+	}
+	return true;
 }

@@ -24,7 +24,7 @@ public:
 
 private:
 	SOCKET socket_;
-	SOCKADDR_IN address;
+	SOCKADDR_IN address_;
 
 	/*static void ReceiveThread(void* params);
 	void _ReceiveThread(ReceiveThreadParams* params);*/

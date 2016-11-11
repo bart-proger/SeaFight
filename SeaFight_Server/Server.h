@@ -15,13 +15,14 @@ public:
 
 	Player* readyPlayer() const;
 	void setReadyPlayer(Player* );
-	void RemoveDisconnectedPlayers();
+	void removeDisconnectedPlayers();
 private:
-	static bool IsDisconnected(Player* );
+	static bool isDisconnected(Player* );
 	
 	WinTcpListener listener_;
 	std::vector<Player*> players_;
 	Player* readyPlayer_;
-	InputThread inputThread_;
+
+	InputThread consoleInputThread_;
 };
 

@@ -6,7 +6,7 @@
 WinTcpListener::WinTcpListener():
 	socket_(INVALID_SOCKET) 
 {
-	ZeroMemory(&address, sizeof(SOCKADDR_IN));
+	ZeroMemory(&address_, sizeof(SOCKADDR_IN));
 	// —оздание сокета
 	socket_ = socket(AF_INET, SOCK_STREAM, 0);
 	// ≈сли создание сокета завершилось с ошибкой, выводим сообщение,
@@ -27,13 +27,14 @@ WinTcpListener::~WinTcpListener()
 bool WinTcpListener::Listen(string ip, unsigned short port)
 {
 	// Ўаблон дл€ инициализации структуры адреса
-	ZeroMemory(&address, sizeof(SOCKADDR_IN));
-	address.sin_family = AF_INET;
-	address.sin_port = htons(port);
-	address.sin_addr.s_addr = inet_addr(ip.c_str());
+	ZeroMemory(&address_, sizeof(SOCKADDR_IN));
+	address_.sin_family = AF_INET;
+	address_.sin_port = htons(port);
+	//address.sin_addr.s_addr = inet_addr(ip.c_str());
+	inet_pton(AF_INET, ip.c_str(), &(address_.sin_addr));
 
 	// ѕрив€зываем сокет к IP-адресу
-	int result = bind(socket_, (SOCKADDR*)&address, sizeof(SOCKADDR_IN));
+	int result = bind(socket_, (SOCKADDR*)&address_, sizeof(SOCKADDR_IN));
 	// ≈сли прив€зать адрес к сокету не удалось, то выводим сообщение
 	// об ошибке, освобождаем пам€ть, выделенную под структуру addr.
 	// и закрываем открытый сокет.

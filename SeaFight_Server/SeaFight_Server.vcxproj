@@ -146,7 +146,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Battle.cpp" />
     <ClCompile Include="InputThread.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -157,7 +156,6 @@
     <ClCompile Include="WinThread.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Battle.h" />
     <ClInclude Include="InputThread.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Server.h" />

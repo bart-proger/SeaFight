@@ -7,7 +7,7 @@ Battle::Battle():
 	player2(NULL)
 //	readyPlayers(0)
 {
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 	std::cout << "Create new battle\n";
 }
 

@@ -22,7 +22,8 @@ bool WinTcpClient::Connect(string ip, unsigned short port)
 	ZeroMemory(&address_, sizeof(SOCKADDR_IN));
 	address_.sin_family = AF_INET;
 	address_.sin_port = htons(port);
-	address_.sin_addr.s_addr = inet_addr(ip.c_str());
+	//address_.sin_addr.s_addr = inet_addr(ip.c_str());
+	inet_pton(AF_INET, ip.c_str(), &(address_.sin_addr));
 
 	int result = connect(socket_, (SOCKADDR*)&address_, sizeof(SOCKADDR_IN));
 	if (result == SOCKET_ERROR)
