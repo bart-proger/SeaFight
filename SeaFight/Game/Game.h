@@ -21,14 +21,14 @@ public:
 
 	Game();
 
-	void setScene(Scene &);
-	Scene & scene();
-	PlayState state() const;
+	void setScene(Scene &value) {	scene_ = &value; }
+	Scene & scene() { return *scene_; }
+	Game::PlayState state() const { return state_; }
 
-	Player & player();
-	Player & enemy();
-
-	TcpClient & client();
+	Player & player() { return player_; }
+	Player & enemy() { return enemy_; }
+	
+	TcpClient & client() { return client_; }
 
 	bool connectToServer();
 	void parseCommand(string cmd);

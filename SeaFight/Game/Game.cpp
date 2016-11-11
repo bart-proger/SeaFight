@@ -21,36 +21,6 @@ Game::Game():
 {
 }
 
-void Game::setScene(Scene &value)
-{
-	scene_ = &value;
-}
-
-Scene & Game::scene()
-{
-	return *scene_;
-}
-
-Game::PlayState Game::state() const
-{
-	return state_;
-}
-
-Player & Game::player()
-{
-	return player_;
-}
-
-Player & Game::enemy()
-{
-	return enemy_;
-}
-
-TcpClient & Game::client()
-{
-	return client_;
-}
-
 void Game::parseCommand(string cmd)
 {
 	if (cmd[0] != '>')
@@ -113,6 +83,7 @@ void Game::parseCommand(string cmd)
 		// TODO: else if (args[0] == CMD_GET_KILL)
 		//	{
 		//	}
+		//TODO: отправлять с сервера KILL / GET_KILL и обрабатывать их клиентом
 	}
 }
 
