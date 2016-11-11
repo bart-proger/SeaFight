@@ -61,6 +61,29 @@ SDL_Point Ship::deckCoord(int deck) const
 	return SDL_Point{ pos_.x + DIR[dir_][0] * deck, pos_.y + DIR[dir_][1] * deck };
 }
 
+std::vector<SDL_Point> Ship::coordsAround() const
+{
+	std::vector<SDL_Point> coords;
+
+	Direction befor = static_cast<Direction>((dir_ - 1 + 4) % 4),
+			after = static_cast<Direction>((dir_ + 1) % 4);
+
+	SDL_Point p = { pos_.x - DIR[dir_][0], pos_.y - DIR[dir_][1] };
+	coords.push_back(p);
+
+	for (int i = -1; i < length_; ++i)
+	{
+		coords.push_back(SDL_Point{ p.x + DIR[befor][0], p.y + DIR[befor][1] });
+		coords.push_back(SDL_Point{ p.x + DIR[after][0], p.y + DIR[after][1] });
+		p.x += DIR[dir_][0];
+		p.y += DIR[dir_][1];
+	}
+	coords.push_back(SDL_Point{ p.x + DIR[befor][0], p.y + DIR[befor][1] });
+	coords.push_back(SDL_Point{ p.x + DIR[after][0], p.y + DIR[after][1] });
+	coords.push_back(p);
+	return coords;
+}
+
 void Ship::resetDamage()
 {
 	memset(damaged_, 0, sizeof(damaged_));

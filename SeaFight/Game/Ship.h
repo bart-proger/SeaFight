@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL2/SDL_rect.h>
+#include <vector>
 
 class Graphics;
 
@@ -16,6 +17,7 @@ public:
 	bool collidedWith(const Ship &) const;
 	int deckAt(SDL_Point coord) const;
 	SDL_Point deckCoord(int deck) const;
+	std::vector<SDL_Point> coordsAround() const;
 	void resetDamage();
 	void addDamage(int deck);
 	bool outOfMap() const;

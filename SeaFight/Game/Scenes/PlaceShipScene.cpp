@@ -44,14 +44,19 @@ void PlaceShipScene::OnClick(SDL_Point p)
 	Scene::OnClick(p);
 
 	Player &player = game().player();
-	Ship newShip(rand() % 4 + 1, player.coordAt(p), static_cast<Ship::Direction>(rand() % 4));
-
-	if (player.checkShipPosition(newShip))
+	SDL_Point coord = player.coordAt(p);
+	if (coord.x > -1 && coord.y > -1)
 	{
-		player.addShip(newShip);
+		Ship newShip(rand() % 4 + 1, coord, static_cast<Ship::Direction>(rand() % 4));
+
+		if (player.checkShipPosition(newShip))
+		{
+			player.addShip(newShip);
+			player.addKill(coord);
+		}
+		else
+			std::cout << "Cann't place " << newShip.length() << "decks ship at (" << newShip.x() << ", " << newShip.y() << ")\n";
 	}
-	else
-		std::cout << "Cann't place " << newShip.length() << "decks ship at (" << newShip.x() << ", " << newShip.y() << ")\n";
 
 
 //TODO: добавление кораблей

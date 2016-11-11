@@ -166,6 +166,7 @@ bool Game::OnInit()
 	g.AddSprite("ship", 166, 242, 24, 24);
 	g.AddSprite("hit", 190, 242, 24, 24);
 	g.AddSprite("miss", 214, 242, 24, 24);
+	g.AddSprite("free", 238, 242, 24, 24);
 	g.AddSprite("coord_abc", 201, 0, 235, 30);
 	g.AddSprite("coord_123", 482, 0, 30, 240);
 	g.AddSprite("wait_enemy", 332, 32, 94, 94);

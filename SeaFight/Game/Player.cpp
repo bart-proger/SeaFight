@@ -39,7 +39,7 @@ void Player::clearEnemyShots()
 	{
 		s.resetDamage();
 	}
-	memset(enemyShots_, false, sizeof(enemyShots_));
+	memset(enemyShots_, ShotType::NONE, sizeof(enemyShots_));
 }
 
 void Player::addHit(SDL_Point coord)
@@ -65,11 +65,17 @@ void Player::addKill(SDL_Point coord)
 	int deck;
 	for (auto s : ships_)
 	{
-		deck = s.deckAt(coord);
-		if (deck > -1)
+		if (deck = s.deckAt(coord) > -1)
+		{
 			s.addDamage(deck);
+
+			auto around = s.coordsAround();
+			for (auto c : around)
+			{
+				enemyShots_[c.y][c.x] = ShotType::FREE;
+			}
+		}
 	}
-	//TODO: расставить вокруг убитого корабля отметки
 }
 
 string Player::mapData() const
@@ -119,15 +125,19 @@ void Player::draw(Graphics & g)
 	for (int j = 0; j < 10; ++j)
 		for (int i = 0; i < 10; ++i)
 		{
+			int x = i*Ship::DECK_SIZE + drawOffset_.x,
+				y = j*Ship::DECK_SIZE + drawOffset_.y;
 			switch (enemyShots_[j][i])
 			{
-				case HIT:
-					g.DrawSprite("hit", i*Ship::DECK_SIZE + drawOffset_.x, j*Ship::DECK_SIZE + drawOffset_.y);
+				case ShotType::HIT:
+					g.DrawSprite("hit", x, y);
 					break;
-				case MISS:
-					g.DrawSprite("miss", i*Ship::DECK_SIZE + drawOffset_.x, j*Ship::DECK_SIZE + drawOffset_.y);
+				case ShotType::MISS:
+					g.DrawSprite("miss", x, y);
 					break;
-				default:
+				case ShotType::FREE:
+					g.DrawSprite("free", x, y);
+				default: //NONE
 					break;
 			}
 		}

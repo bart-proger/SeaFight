@@ -10,7 +10,7 @@ class Graphics;
 class Player
 {
 public:
-	enum ShotType { NONE = 0, HIT, MISS };
+	enum ShotType { NONE = 0, HIT, MISS, FREE };
 	Player();
 	
 	bool checkShipPosition(const Ship &) const;
