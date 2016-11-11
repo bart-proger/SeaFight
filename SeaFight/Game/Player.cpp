@@ -81,8 +81,9 @@ void Player::addKill(SDL_Point coord)
 
 string Player::mapData() const
 {
-	char data[100];
-	memset(data, '0', sizeof(data));
+	char data[101];
+	memset(data, '0', sizeof(char)*100);
+	data[100] = '\0';
 
 	for (auto s : ships_)
 	{
