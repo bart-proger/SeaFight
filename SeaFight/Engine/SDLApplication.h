@@ -28,7 +28,7 @@ public:
 protected:
 	virtual bool OnInit() { return true; }
 	virtual void OnFree() {}
-	//TODO: virtual void OnUpdate() {}
+	virtual void OnUpdate() {}
 	virtual void OnDraw() {}
 	virtual void OnKeyEvent() {}
 	virtual void OnMouseEvent(SDL_Point ) {}

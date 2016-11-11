@@ -12,6 +12,7 @@ class Player
 public:
 	enum ShotType { NONE = 0, HIT, MISS, FREE };
 	Player();
+	virtual ~Player() { clearShips(); }
 	
 	bool checkShipPosition(const Ship &) const;
 	void addShip(const Ship &);
@@ -20,13 +21,13 @@ public:
 
 	void addHit(SDL_Point coord);
 	void addMiss(SDL_Point coord);
-	void addKill(SDL_Point coord);
+	virtual void addKill(SDL_Point coord);
 	string mapData() const;
 
 	void setDrawOffset(int x, int y);
 	SDL_Point coordAt(SDL_Point p);
 	void draw(Graphics & g);
-private:
+protected:
 	std::vector<Ship> ships_;
 	ShotType enemyShots_[10][10];
 	SDL_Point drawOffset_;

@@ -109,9 +109,9 @@ void SDLApplication::Run()
 			}
 		}
 
-		//TODO: OnUpdate();
+		OnUpdate();
 		OnDraw();
-        //Update screen
+
         graphics_.Present();
 	}
 	Free();

@@ -15,7 +15,7 @@ int ReceiveThread::Process()
 	while (game_.client().Connected() && game_.client().Receive(cmd))
 	{
 		std::cout << "server: " << cmd.c_str() << std::endl;
-		game_.parseCommand(cmd);
+		game_.pushCommand(cmd);
 	}
 	return 0;
 }

@@ -2,7 +2,8 @@
 #include <string>
 #include "../Engine/Graphics.h"
 
-const int Ship::DIR[4][2] = { { 0, -1 },{ 1, 0 },{ 0, 1 },{ -1, 0 } };
+//								rigth    down      left       up
+const int Ship::DIR[4][2] = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
 
 
 Ship::Ship(int length, SDL_Point pos, Direction dir):
@@ -53,11 +54,6 @@ int Ship::deckAt(SDL_Point coord) const
 
 SDL_Point Ship::deckCoord(int deck) const
 {
-	/*SDL_Point p = pos_;
-
-	p.x += DIR[dir_][0] * deck;
-	p.y += DIR[dir_][1] * deck;
-*/
 	return SDL_Point{ pos_.x + DIR[dir_][0] * deck, pos_.y + DIR[dir_][1] * deck };
 }
 

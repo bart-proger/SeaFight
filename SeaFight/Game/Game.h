@@ -8,11 +8,10 @@
 #include "../Engine/TcpClient.h"
 #include "ReceiveThread.h"
 #include "../Engine/Font.h"
-
+#include "Enemy.h"
+#include <queue>
 
 class Scene;
-
-//#include "Scene.h"
 
 class Game: public SDLApplication
 {
@@ -26,14 +25,16 @@ public:
 	Game::PlayState state() const { return state_; }
 
 	Player & player() { return player_; }
-	Player & enemy() { return enemy_; }
+	Enemy & enemy() { return enemy_; }
 	
 	TcpClient & client() { return client_; }
 
 	bool connectToServer();
-	void parseCommand(string cmd);
 	void readyPlay();
 	void fire(SDL_Point coord);
+
+	void pushCommand(string cmd);
+	void parseCommands();
 	
 	MainMenuScene mainMenuScene;
 	PlaceShipScene placeShipScene;
@@ -42,6 +43,7 @@ public:
 private:
 	bool OnInit() override;
 	void OnFree() override;
+	void OnUpdate() override;
 	void OnDraw() override;
 	void OnKeyEvent() override;
 	void OnMouseEvent(SDL_Point ) override;
@@ -51,10 +53,11 @@ private:
 	SDL_Point lastFire_;
 
 	Player player_;
-	Player enemy_;
+	Enemy enemy_;
 
 	TcpClient client_;
 	ReceiveThread receiveThread_;
+	std::queue<string> commands_;
 	
 	Font font_;
 };

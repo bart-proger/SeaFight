@@ -7,7 +7,7 @@
 
 Player::Player()
 {
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 	clearEnemyShots();
 }
 
@@ -72,7 +72,8 @@ void Player::addKill(SDL_Point coord)
 			auto around = s.coordsAround();
 			for (auto c : around)
 			{
-				enemyShots_[c.y][c.x] = ShotType::FREE;
+				if (c.x >= 0 && c.x < 10 && c.y >= 0 && c.y < 10 && enemyShots_[c.y][c.x] == ShotType::NONE)
+					enemyShots_[c.y][c.x] = ShotType::FREE;
 			}
 		}
 	}

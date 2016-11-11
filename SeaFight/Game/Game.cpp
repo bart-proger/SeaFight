@@ -21,72 +21,18 @@ Game::Game():
 {
 }
 
-void Game::parseCommand(string cmd)
+bool Game::connectToServer()
 {
-	if (cmd[0] != '>')
+	if (!client_.Connect(SERVER_IP, SERVER_PORT))
 	{
-		std::cerr << "[error] Bad command format!\n";
-		return;
+		std::cout << "Couldn't connect to server: " << SERVER_IP << ":" << SERVER_PORT << std::endl;
+		return false;
 	}
+	if (!receiveThread_.Start())
+		return false;
 
-	std::vector<string> args;
-	std::stringstream ss(cmd);
-	string item;
-
-	while (std::getline(ss, item, ':')) 
-	{
-		args.push_back(item);
-	}
-
-	if (args[0] == CMD_FIRST)
-	{
-		state_ = MyStep;
-	}
-	else if (args[0] == CMD_SECOND)
-	{
-		state_ = EnemyStep;
-	}
-	else if (args[0] == CMD_ENEMY_DISCONNECTED)
-	{
-		//TODO: show message if enemy disconnected
-		//NewGame();
-		setScene(placeShipScene);
-		state_ = WaitEnemy;
-		player_.clearEnemyShots();
-	}
-	else if (args.size() >= 3)
-	{
-		SDL_Point coord{ atoi(args[1].c_str()), atoi(args[2].c_str()) };
-	
-		if (args[0] == CMD_HIT)
-		{
-			enemy_.addHit(coord);
-		}
-		else if (args[0] == CMD_MISS)
-		{
-			enemy_.addMiss(coord);
-			state_ = PlayState::EnemyStep;
-		}
-		else if (args[0] == CMD_KILL)
-		{
-
-		}
-		else if (args[0] == CMD_GET_HIT)
-		{
-			player_.addHit(coord);
-		}
-		else if (args[0] == CMD_GET_MISS)
-		{
-			player_.addMiss(coord);
-			state_ = PlayState::MyStep;
-		}
-		// TODO: else if (args[0] == CMD_GET_KILL)
-		//	{
-		//	}
-		//TODO: отправлять с сервера KILL / GET_KILL и обрабатывать их клиентом
-	}
+	return true;
 }
-
 
 void Game::readyPlay()
 {
@@ -101,17 +47,90 @@ void Game::fire(SDL_Point coord)
 	client_.Send(ssCmd.str());
 }
 
-bool Game::connectToServer()
+void Game::pushCommand(string cmd)
 {
-	if (!client_.Connect(SERVER_IP, SERVER_PORT))
-	{
-		std::cout << "Couldn't connect to server: " << SERVER_IP << ":" << SERVER_PORT << std::endl;
-		return false;
-	}
-	if (!receiveThread_.Start())
-		return false;
+	//TODO: lock
+	commands_.push(cmd);
+	//unlock
+}
 
-	return true;
+void Game::parseCommands()
+{
+	while (true)
+	{
+		//TODO: lock
+		bool empty = commands_.empty();
+		//unlock
+		if (empty)
+			break;
+		//lock
+		string cmd = commands_.back();
+		commands_.pop();
+		//unlock
+
+		if (cmd[0] != '>')
+		{
+			std::cerr << "[error] Bad command format!\n";
+			return;
+		}
+
+		std::vector<string> args;
+		std::stringstream ss(cmd);
+		string item;
+
+		while (std::getline(ss, item, ':'))
+		{
+			args.push_back(item);
+		}
+
+		if (args[0] == CMD_FIRST)
+		{
+			state_ = MyStep;
+		}
+		else if (args[0] == CMD_SECOND)
+		{
+			state_ = EnemyStep;
+		}
+		else if (args[0] == CMD_ENEMY_DISCONNECTED)
+		{
+			//TODO: show message if enemy disconnected
+			//NewGame();
+			setScene(placeShipScene);
+			state_ = WaitEnemy;
+			player_.clearEnemyShots();
+		}
+		else if (args.size() >= 3)
+		{
+			SDL_Point coord{ atoi(args[1].c_str()), atoi(args[2].c_str()) };
+
+			if (args[0] == CMD_HIT)
+			{
+				enemy_.addHit(coord);
+			}
+			else if (args[0] == CMD_MISS)
+			{
+				enemy_.addMiss(coord);
+				state_ = PlayState::EnemyStep;
+			}
+			else if (args[0] == CMD_KILL)
+			{
+				enemy_.addKill(coord);
+			}
+			else if (args[0] == CMD_GET_HIT)
+			{
+				player_.addHit(coord);
+			}
+			else if (args[0] == CMD_GET_MISS)
+			{
+				player_.addMiss(coord);
+				state_ = PlayState::MyStep;
+			}
+			else if (args[0] == CMD_GET_KILL)
+			{
+				player_.addKill(coord);
+			}
+		}
+	}
 }
 
 bool Game::OnInit()
@@ -166,6 +185,11 @@ void Game::OnKeyEvent()
 void Game::OnMouseEvent(SDL_Point p)
 {
 	scene_->OnClick(p);
+}
+
+void Game::OnUpdate()
+{
+	parseCommands();
 }
 
 void Game::OnDraw()

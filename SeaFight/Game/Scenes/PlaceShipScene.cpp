@@ -52,10 +52,9 @@ void PlaceShipScene::OnClick(SDL_Point p)
 		if (player.checkShipPosition(newShip))
 		{
 			player.addShip(newShip);
-			player.addKill(coord);
 		}
 		else
-			std::cout << "Cann't place " << newShip.length() << "decks ship at (" << newShip.x() << ", " << newShip.y() << ")\n";
+			std::cout << "Cann't place " << newShip.length() << " decks ship at (" << newShip.x() << ", " << newShip.y() << ")\n";
 	}
 
 

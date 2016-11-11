@@ -149,6 +149,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\Enemy.cpp" />
     <ClCompile Include="Engine\Font.cpp" />
     <ClCompile Include="Engine\Graphics.cpp" />
     <ClCompile Include="Engine\Network.cpp" />
@@ -167,6 +168,7 @@
     <ClCompile Include="Game\Ship.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\Enemy.h" />
     <ClInclude Include="Engine\Font.h" />
     <ClInclude Include="Engine\Graphics.h" />
     <ClInclude Include="Engine\Network.h" />

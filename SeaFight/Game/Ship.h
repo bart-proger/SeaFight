@@ -7,7 +7,7 @@ class Graphics;
 class Ship
 {
 public:
-	enum Direction { UP = 0, RIGHT, DOWN, LEFT };
+	enum Direction { RIGHT = 0, DOWN, LEFT, UP };
 	enum { DECK_SIZE = 24 };
 	static const int DIR[4][2];
 	Ship(int length, SDL_Point pos, Direction dir);
