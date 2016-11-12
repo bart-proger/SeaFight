@@ -50,7 +50,10 @@ void Player::addHit(SDL_Point coord)
 	{
 		deck = s.deckAt(coord);
 		if (deck > -1)
+		{
 			s.addDamage(deck);
+			break;
+		}
 	}
 }
 
@@ -69,12 +72,14 @@ void Player::addKill(SDL_Point coord)
 		{
 			s.addDamage(deck);
 
+/*
 			auto around = s.coordsAround();
 			for (auto c : around)
 			{
 				if (c.x >= 0 && c.x < 10 && c.y >= 0 && c.y < 10 && enemyShots_[c.y][c.x] == ShotType::NONE)
 					enemyShots_[c.y][c.x] = ShotType::FREE;
 			}
+*/
 		}
 	}
 }
@@ -82,7 +87,7 @@ void Player::addKill(SDL_Point coord)
 string Player::mapData() const
 {
 	char data[101];
-	memset(data, '0', sizeof(char)*100);
+	memset(data, '0', sizeof(data));
 	data[100] = '\0';
 
 	for (auto s : ships_)

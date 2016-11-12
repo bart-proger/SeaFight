@@ -66,6 +66,7 @@ void Enemy::addKill(SDL_Point coord)
 	}
 
 	Ship ship{ len, max, static_cast<Ship::Direction>(dir) };
+	ship.setKilled(true);
 	ships_.push_back(ship);
 
 	auto around = ship.coordsAround();

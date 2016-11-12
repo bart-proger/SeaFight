@@ -12,7 +12,8 @@ public:
 	static const int DIR[4][2];
 	Ship(int length, SDL_Point pos, Direction dir);
 
-//	bool killed() const { return killed_; }
+	bool killed() const { return killed_; }
+	void setKilled(bool value) { killed_ = value; }
 //	bool damaged(int deck) const { return damaged_[deck]; }
 	bool collidedWith(const Ship &) const;
 	int deckAt(SDL_Point coord) const;
@@ -32,5 +33,5 @@ private:
 	SDL_Point pos_;
 	Direction dir_;
 	bool damaged_[4];
-//	bool killed_;
+	bool killed_;
 };
