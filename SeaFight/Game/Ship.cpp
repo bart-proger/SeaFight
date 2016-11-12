@@ -1,6 +1,7 @@
 #include "Ship.h"
 #include <string>
 #include "../Engine/Graphics.h"
+#include <sstream>
 
 //								rigth    down      left       up
 const int Ship::DIR[4][2] = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
@@ -100,11 +101,20 @@ bool Ship::outOfMap() const
 
 void Ship::draw(Graphics &g, SDL_Point offset)
 {
-	SDL_Point p = pos_;
+	/*SDL_Point p = pos_;
 	for (int i = 0; i < length_; ++i)
 	{
 		g.DrawSprite("ship", offset.x + p.x * DECK_SIZE, offset.y + p.y * DECK_SIZE);
 		p.x += DIR[dir_][0];
 		p.y += DIR[dir_][1];
-	}
+	}*/
+
+	std::stringstream ss;
+	ss << "ship" << length_;
+	int x = offset.x + pos_.x * DECK_SIZE,
+		y = offset.y + pos_.y * DECK_SIZE;
+	g.DrawSprite(ss.str(), x, y, dir_*90/* + angle*/, DECK_SIZE / 2, DECK_SIZE / 2);
+/*
+	if ((angle += 2) >= 360)
+		angle -= 360;*/
 }

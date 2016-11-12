@@ -124,7 +124,7 @@ void Player::draw(Graphics & g)
 {
 	g.DrawSprite("sea", drawOffset_.x, drawOffset_.y);
 
-	for (auto s : ships_)
+	for (auto &s : ships_)
 	{
 		s.draw(g, drawOffset_);
 	}

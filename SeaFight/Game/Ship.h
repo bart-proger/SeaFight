@@ -34,4 +34,6 @@ private:
 	Direction dir_;
 	bool damaged_[4];
 	bool killed_;
+
+//	float angle = 0;
 };

@@ -32,6 +32,7 @@ public:
 	void DrawSprite(string name, int x, int y);
 	void DrawSprite(string name, SDL_Rect rect);
 	void DrawSprite(string name, int x, int y, double angle);
+	void DrawSprite(string name, int x, int y, double angle, int centerX, int centerY);
 	void DrawText(const Font &font, SDL_Color color, string text, int x, int y);
 
 private:

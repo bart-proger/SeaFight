@@ -161,6 +161,11 @@ bool Game::OnInit()
 	g.AddSprite("coord_123", 482, 0, 30, 240);
 	g.AddSprite("wait_enemy", 332, 32, 94, 94);
 
+	g.AddSprite("ship4", 250, 270, 96, 24);
+	g.AddSprite("ship3", 250, 300, 72, 24);
+	g.AddSprite("ship2", 250, 330, 48, 24);
+	g.AddSprite("ship1", 250, 360, 24, 24);
+
 	mainMenuScene.Init();
 	placeShipScene.Init();
 

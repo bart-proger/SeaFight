@@ -174,6 +174,14 @@ void Graphics::DrawSprite(string name, int x, int y, double angle)
 	SDL_RenderCopyEx(renderer_, texture_.sdlTexture_, &s, &rect, angle, &center, SDL_FLIP_NONE);
 }
 
+void Graphics::DrawSprite(string name, int x, int y, double angle, int centerX, int centerY)
+{
+	Sprite s = sprites_[name];
+	SDL_Rect rect = { x, y, s.w, s.h };
+	SDL_Point center = { centerX, centerY };
+	SDL_RenderCopyEx(renderer_, texture_.sdlTexture_, &s, &rect, angle, &center, SDL_FLIP_NONE);
+}
+
 void Graphics::DrawText(const Font &font, SDL_Color color, string text, int x, int y)
 {
 	//TODO: вывод русского текста
