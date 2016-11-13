@@ -141,6 +141,11 @@ void Player::WaitNextEnemy()
 	bool found = false;
 	while (!found)
 	{
+		if (!client_.Send(CMD_OK))
+		{
+			server_->setReadyPlayer(NULL);
+			break;
+		}
 		Sleep(3000);
 		//TODO: lock
 		if (enemy_)
@@ -219,7 +224,8 @@ void Player::Process()				//------- ReceiveThread
 	while (/*client_.Connected() && */client_.Receive(data))
 	{
 		std::cout << name_ << ": " << data.c_str() << std::endl;
-		ParseCommand(data);
+		if (data != CMD_OK)
+			ParseCommand(data);
 	}
 
 	state_ = PlayState::Disconnected;

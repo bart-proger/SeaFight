@@ -75,3 +75,5 @@ private:
 
 #define CMD_READY_PLAY	">map"	//:01001101...
 #define CMD_FIRE		">fire"	//:x:y
+
+#define CMD_OK			">ok"
