@@ -157,6 +157,7 @@
     <ClCompile Include="Engine\TcpClient.cpp" />
     <ClCompile Include="Engine\Texture.cpp" />
     <ClCompile Include="Engine\Thread.cpp" />
+    <ClCompile Include="Game\FreeShipsGroup.cpp" />
     <ClCompile Include="Game\Game.cpp" />
     <ClCompile Include="Game\main.cpp" />
     <ClCompile Include="Game\Player.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="Engine\TcpClient.h" />
     <ClInclude Include="Engine\Texture.h" />
     <ClInclude Include="Engine\Thread.h" />
+    <ClInclude Include="Game\FreeShipsGroup.h" />
     <ClInclude Include="Game\Game.h" />
     <ClInclude Include="Game\Player.h" />
     <ClInclude Include="Game\ReceiveThread.h" />

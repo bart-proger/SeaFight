@@ -4,17 +4,17 @@
 #include "../Ship.h"
 
 PlaceShipScene::PlaceShipScene(Game &game):
-	Scene(game)
+	Scene(game),
+	freeShipsGroups_{ {1, 290, 30}, {2, 290, 70}, {3, 290, 110}, {4, 290, 150} }
 {
 }
 
 void PlaceShipScene::Init()
 {
-	SDL_Rect r1 = { 287, 100, 143, 44 };
-	AddButton("btn_ClearMap", r1, ClearMap_Click);
-
-	SDL_Rect r2 = { 302, 214, 107, 44 };
-	AddButton("btn_GoFight", r2, GoFight_Click);
+	//SDL_Rect r1 = { 287+180, 100, 143, 44 };
+	AddButton("btn_ClearMap", /*r1*/{ 287 + 180, 100, 143, 44 }, ClearMap_Click);
+	//SDL_Rect r2 = { 302+180, 214, 107, 44 };
+	AddButton("btn_GoFight", /*r2*/{ 302 + 180, 214, 107, 44 }, GoFight_Click);
 }
 
 void PlaceShipScene::Draw(Graphics &g)
@@ -22,6 +22,11 @@ void PlaceShipScene::Draw(Graphics &g)
 	Scene::Draw(g);
 
 	game().player().draw(g);
+
+	for (int i = 0; i < 4; ++i)
+	{
+		freeShipsGroups_[i].draw(g);
+	}
 }
 
 void PlaceShipScene::ClearMap_Click(Scene &scene)
@@ -29,6 +34,7 @@ void PlaceShipScene::ClearMap_Click(Scene &scene)
 	std::clog << "click Clear map\n";
 	
 	scene.game().player().clearShips();
+	//TODO: סבנמס freeShips
 }
 
 void PlaceShipScene::GoFight_Click(Scene &scene)
@@ -68,3 +74,4 @@ void PlaceShipScene::OnClick(SDL_Point p)
 // 			std::clog << "don't place ship part to (" << coord.x << ", " << coord.y << ")" << std::endl;
 // 	}
 }
+
