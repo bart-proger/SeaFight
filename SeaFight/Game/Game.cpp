@@ -189,7 +189,7 @@ void Game::OnKeyEvent()
 
 void Game::OnMouseEvent(SDL_Point p)
 {
-	scene_->OnClick(p);
+	scene_->onClick(p);
 }
 
 void Game::OnUpdate()

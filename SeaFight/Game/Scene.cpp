@@ -14,7 +14,7 @@ void Scene::Draw(Graphics &g)
 	}
 }
 
-void Scene::OnClick(SDL_Point p)
+void Scene::onClick(SDL_Point p)
 {
 	for (auto &b: buttons_)
 	{

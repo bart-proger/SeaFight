@@ -12,7 +12,9 @@ public:
 	virtual void Init() {}
 	virtual void Draw(Graphics &);
 	virtual void Update(float dt) {}
-	virtual void OnClick(SDL_Point );
+	virtual void onClick(SDL_Point );
+	virtual void onPress(SDL_Point );
+	virtual void onRelease(SDL_Point );
 	Game & game();
 
 	typedef void (*ButtonClickFunc)(Scene &);

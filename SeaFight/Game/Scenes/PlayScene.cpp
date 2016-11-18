@@ -37,7 +37,7 @@ void PlayScene::Draw(Graphics &g)
 
 void PlayScene::OnClick(SDL_Point p)
 {
-	Scene::OnClick(p);
+	Scene::onClick(p);
 
 	if (game().state() == Game::MyStep)
 	{

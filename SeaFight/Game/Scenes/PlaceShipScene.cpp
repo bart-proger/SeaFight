@@ -5,7 +5,8 @@
 
 PlaceShipScene::PlaceShipScene(Game &game):
 	Scene(game),
-	freeShipsGroups_{ {1, 290, 30}, {2, 290, 70}, {3, 290, 110}, {4, 290, 150} }
+	freeShipsGroups_{ {1, 290, 30}, {2, 290, 70}, {3, 290, 110}, {4, 290, 150} },
+	selected_{ 0, {-1, -1} }
 {
 }
 
@@ -45,9 +46,9 @@ void PlaceShipScene::GoFight_Click(Scene &scene)
 	scene.game().setScene(scene.game().playScene);
 }
 
-void PlaceShipScene::OnClick(SDL_Point p)
+void PlaceShipScene::onClick(SDL_Point p)
 {
-	Scene::OnClick(p);
+	Scene::onClick(p);
 
 	Player &player = game().player();
 	SDL_Point coord = player.coordAt(p);
@@ -56,6 +57,7 @@ void PlaceShipScene::OnClick(SDL_Point p)
 		Ship newShip(rand() % 4 + 1, coord, static_cast<Ship::Direction>(rand() % 4));
 
 		if (player.checkShipPosition(newShip))
+
 		{
 			player.addShip(newShip);
 		}

@@ -3,6 +3,12 @@
 #include "../Ship.h"
 #include "../FreeShipsGroup.h"
 
+struct SelectedShip
+{
+	int decks;
+	SDL_Point pos;
+};
+
 class PlaceShipScene : public Scene
 {
 public:
@@ -15,8 +21,11 @@ private:
 	static void ClearMap_Click(Scene &);
 	static void GoFight_Click(Scene &);
 
-	void OnClick(SDL_Point ) override;
+	void onClick(SDL_Point ) override;
+	void onPress(SDL_Point ) override;
+	void onRelease(SDL_Point) override;
 
 	FreeShipsGroup freeShipsGroups_[4];
+	SelectedShip selected_;
 };
 
