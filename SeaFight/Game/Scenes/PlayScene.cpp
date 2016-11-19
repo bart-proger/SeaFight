@@ -11,6 +11,8 @@ void PlayScene::Init()
 {
 	//TODO: кнопка [Сдаться]
 	//SDL_Rect = { 250, 250,  };
+	if (!font_.LoadFromFile("data/Skellyman.ttf"))
+		return;
 }
 
 void PlayScene::Update(float dt)
@@ -27,15 +29,25 @@ void PlayScene::Draw(Graphics &g)
 	game().player().draw(g);
 	game().enemy().draw(g);
 
+	string status = "";
+
 	if (game().state() == Game::WaitEnemy)
 	{
 		g.DrawSprite("wait_enemy", 415, 110, angle);
 		if ((angle += 2) >= 360)
 			angle -= 360;
+		status = "Wait for enemy to connect...";
 	}
+	else if (game().state() == Game::MyStep)
+		status = "Fire!!!";
+	else if (game().state() == Game::EnemyStep)
+		status = "Enemy shot...";
+
+	if (font_.Loaded())
+		g.DrawText(font_, SDL_Color{ 0, 0, 0, 255 }, status, 30, 300);
 }
 
-void PlayScene::OnClick(SDL_Point p)
+void PlayScene::onClick(SDL_Point p)
 {
 	Scene::onClick(p);
 

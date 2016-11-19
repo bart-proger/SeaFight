@@ -94,10 +94,12 @@ void Game::parseCommands()
 		else if (args[0] == CMD_ENEMY_DISCONNECTED)
 		{
 			//TODO: show message if enemy disconnected
-			//NewGame();
 			setScene(placeShipScene);
-			state_ = WaitEnemy;
+			state_ = PlayState::WaitEnemy;
 			player_.clearEnemyShots();
+
+			enemy_.clearEnemyShots();
+			enemy_.clearShips();
 		}
 		else if (args.size() >= 3)
 		{
@@ -140,10 +142,7 @@ bool Game::OnInit()
 
 	Graphics &g = graphics();
 
- 	if (!g.LoadTexture("data/ui.tga"))
-		return false;
-
-	if (!font_.LoadFromFile("data/Skellyman.ttf"))
+	if (!g.LoadTexture("data/ui.tga"))
 		return false;
 
 	g.AddSprite("btn_PlayOnline", 0, 0, 201, 44);
@@ -168,6 +167,7 @@ bool Game::OnInit()
 
 	mainMenuScene.Init();
 	placeShipScene.Init();
+	playScene.Init();
 
 	player_.setDrawOffset(35, 35);
 	enemy_.setDrawOffset(340, 35);
@@ -201,6 +201,4 @@ void Game::OnDraw()
 {
 	graphics().Clear();
 	scene().Draw(graphics());
-	SDL_Color c = { 0, 0, 0, 255 };
-	graphics().DrawText(font_, c, "Pirates!!!!!!!", 30, 30);
 }

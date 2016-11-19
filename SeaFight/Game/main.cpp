@@ -2,7 +2,7 @@
 #include <iostream>
 //#include <locale>
 
-int main( int argc, char* args[] )
+int SDL_main( int argc, char* args[] )
 {
 	Game app;
 

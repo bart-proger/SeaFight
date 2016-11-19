@@ -6,7 +6,7 @@
 PlaceShipScene::PlaceShipScene(Game &game):
 	Scene(game),
 	freeShipsGroups_{ {1, 290, 30}, {2, 290, 70}, {3, 290, 110}, {4, 290, 150} },
-	selected_{ 0, {-1, -1} }
+	selected_(nullptr)
 {
 }
 
@@ -50,16 +50,33 @@ void PlaceShipScene::onClick(SDL_Point p)
 {
 	Scene::onClick(p);
 
+	for (auto &fsg : freeShipsGroups_)
+	{
+		if (fsg.pressed(p))
+		{
+			if (selected_ == &fsg)
+				selected_->rotate();
+			else
+				selected_ = &fsg;
+			std::cout << "select " << selected_->shipLength() << " decks ship\n";
+			return;
+		}
+	}
+
+	if (!selected_)
+		return;
+
 	Player &player = game().player();
 	SDL_Point coord = player.coordAt(p);
 	if (coord.x > -1 && coord.y > -1)
 	{
-		Ship newShip(rand() % 4 + 1, coord, static_cast<Ship::Direction>(rand() % 4));
+		Ship newShip(selected_->shipLength(), coord, selected_->shipDir());
 
 		if (player.checkShipPosition(newShip))
-
 		{
 			player.addShip(newShip);
+			selected_->decShipsCount();
+			selected_ = nullptr;
 		}
 		else
 			std::cout << "Cann't place " << newShip.length() << " decks ship at (" << newShip.x() << ", " << newShip.y() << ")\n";

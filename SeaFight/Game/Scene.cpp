@@ -8,7 +8,7 @@ Scene::Scene(Game &game):
 
 void Scene::Draw(Graphics &g)
 {
-	for (auto &b: buttons_)
+	for (const auto &b: buttons_)
 	{
 		g.DrawSprite(b.sprite, b.rect);
 	}
@@ -20,8 +20,8 @@ void Scene::onClick(SDL_Point p)
 	{
 		if (SDL_PointInRect(&p, &b.rect))
 		{
-			if (b.OnClick)
-				b.OnClick(*this);
+			if (b.onClick)
+				b.onClick(*this);
 		}
 	}
 }

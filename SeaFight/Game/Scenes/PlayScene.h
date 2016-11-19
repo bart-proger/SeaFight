@@ -1,5 +1,6 @@
 #pragma once
 #include "../Scene.h"
+#include "../../Engine/Font.h"
 
 class PlayScene : public Scene
 {
@@ -13,6 +14,8 @@ public:
 // 	static void ClearMapClick(Scene &);
 // 	static void GoFightClick(Scene &);
 // 
- 	void OnClick(SDL_Point );
+ 	void onClick(SDL_Point );
+private:
+	Font font_;
 };
 

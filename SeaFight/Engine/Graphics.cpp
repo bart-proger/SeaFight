@@ -208,3 +208,10 @@ void Graphics::DrawText(const Font &font, SDL_Color color, string text, int x, i
 		SDL_FreeSurface(surf);
 	}
 }
+
+void Graphics::drawRect(SDL_Rect rect, SDL_Color color)
+{
+	SDL_SetRenderDrawColor(renderer_, color.r, color.g, color.b, color.a);
+	SDL_RenderDrawRect(renderer_, &rect);
+	SDL_SetRenderDrawColor(renderer_, 255, 255, 255, 255);
+}

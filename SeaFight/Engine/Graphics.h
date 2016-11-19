@@ -40,5 +40,7 @@ private:
 	Texture texture_;
 
 	std::map<string, Sprite> sprites_;
+public:
+	void drawRect(SDL_Rect, SDL_Color);
 };
 

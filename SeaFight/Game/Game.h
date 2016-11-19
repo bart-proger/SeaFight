@@ -58,8 +58,6 @@ private:
 	TcpClient client_;
 	ReceiveThread receiveThread_;
 	std::queue<string> commands_;
-	
-	Font font_;
 };
 
 #define CMD_FIRST		">first"

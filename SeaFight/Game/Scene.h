@@ -13,8 +13,8 @@ public:
 	virtual void Draw(Graphics &);
 	virtual void Update(float dt) {}
 	virtual void onClick(SDL_Point );
-	virtual void onPress(SDL_Point );
-	virtual void onRelease(SDL_Point );
+	virtual void onPress(SDL_Point) {} //TODO:
+	virtual void onRelease(SDL_Point) {} //TODO:
 	Game & game();
 
 	typedef void (*ButtonClickFunc)(Scene &);
@@ -31,12 +31,12 @@ private:
 			sprite(asprite),
 			rect(arect),
 			visible(true),
-			OnClick(func) {}
+			onClick(func) {}
 
 		string sprite;
 		SDL_Rect rect;
 		bool visible;
-		Scene::ButtonClickFunc OnClick;
+		Scene::ButtonClickFunc onClick;
 	};
 
 	Game &game_;
