@@ -11,19 +11,19 @@ public:
 	void draw(Graphics &);
 	bool pressed(SDL_Point );
 //	void move(SDL_Point );
-	bool released(SDL_Point );
+//	bool released(SDL_Point );
 	void decShipsCount();
-
-	int shipLength() const { return shipLength_; }
-	Ship::Direction shipDir() const { return shipDir_; }
-
 	void rotate();
 	void updateRect();
+	void reset();
+//prop:
+	int shipLength() const { return shipLength_; }
+	int shipsCount() const { return shipsCount_; }
+	Ship::Direction shipDir() const { return shipDir_; }
 private:
 	int shipLength_;
 	int shipsCount_;
 	Ship::Direction shipDir_;
 
 	SDL_Rect rect_;
-	bool drag_;
 };

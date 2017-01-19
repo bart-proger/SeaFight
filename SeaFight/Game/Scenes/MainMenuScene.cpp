@@ -8,21 +8,21 @@ MainMenuScene::MainMenuScene(Game &game):
 {
 }
 
-void MainMenuScene::Init()
+void MainMenuScene::init()
 {
 	SDL_Rect r1 = { 136, 97, 201, 44 };
-	AddButton("btn_PlayOnline", r1, PlayOnline_Click);
-/*
+	addButton("btn_PlayOnline", r1, PlayOnline_Click);
+
 	SDL_Rect r2 = { 75, 150, 324, 44 };
-	AddButton("btn_PlayVsAI", r2, PlayVsAI_Click);
-*/
+	addButton("btn_PlayVsAI", r2, PlayVsAI_Click);
+
 	SDL_Rect r3 = { 165, 237, 150, 44 };
-	AddButton("btn_Quit", r3, Quit_Click);
+	addButton("btn_Quit", r3, Quit_Click);
 }
 
-void MainMenuScene::Draw(Graphics &g)
+void MainMenuScene::draw(Graphics &g)
 {
-	Scene::Draw(g);
+	Scene::draw(g);
 
 	//...
 }
@@ -51,5 +51,5 @@ void MainMenuScene::PlayVsAI_Click(Scene &scene)
 void MainMenuScene::Quit_Click(Scene &scene)
 {
 	std::clog << "click [Quit]\n";
-	scene.game().Quit();
+	scene.game().quit();
 }

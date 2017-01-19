@@ -2,25 +2,26 @@
 #include "../Game.h"
 #include <iostream>
 #include "../Ship.h"
+#include <sstream>
 
 PlaceShipScene::PlaceShipScene(Game &game):
 	Scene(game),
-	freeShipsGroups_{ {1, 290, 30}, {2, 290, 70}, {3, 290, 110}, {4, 290, 150} },
+	freeShipsGroups_{ {1, 290, 30}, {2, 290, 70}, {3, 290, 134}, {4, 290, 222} },
 	selected_(nullptr)
 {
 }
 
-void PlaceShipScene::Init()
+void PlaceShipScene::init()
 {
 	//SDL_Rect r1 = { 287+180, 100, 143, 44 };
-	AddButton("btn_ClearMap", /*r1*/{ 287 + 180, 100, 143, 44 }, ClearMap_Click);
+	addButton("btn_ClearMap", /*r1*/{ 287 + 180, 100, 143, 44 }, ClearMap_Click);
 	//SDL_Rect r2 = { 302+180, 214, 107, 44 };
-	AddButton("btn_GoFight", /*r2*/{ 302 + 180, 214, 107, 44 }, GoFight_Click);
+	addButton("btn_GoFight", /*r2*/{ 302 + 180, 214, 107, 44 }, GoFight_Click);
 }
 
-void PlaceShipScene::Draw(Graphics &g)
+void PlaceShipScene::draw(Graphics &g)
 {
-	Scene::Draw(g);
+	Scene::draw(g);
 
 	game().player().draw(g);
 
@@ -28,6 +29,13 @@ void PlaceShipScene::Draw(Graphics &g)
 	{
 		freeShipsGroups_[i].draw(g);
 	}
+
+	if (selected_ == nullptr)
+		return;
+
+	std::stringstream ss;
+	ss << "ship" << selected_->shipLength();
+	g.drawSprite(ss.str(), mousePos_.x - Ship::DECK_SIZE / 2, mousePos_.y - Ship::DECK_SIZE / 2, 90 * selected_->shipDir(), Ship::DECK_SIZE / 2, Ship::DECK_SIZE / 2);
 }
 
 void PlaceShipScene::ClearMap_Click(Scene &scene)
@@ -35,7 +43,12 @@ void PlaceShipScene::ClearMap_Click(Scene &scene)
 	std::clog << "click Clear map\n";
 	
 	scene.game().player().clearShips();
-	//TODO: сброс freeShips
+	PlaceShipScene &sc = dynamic_cast<PlaceShipScene &>(scene);
+
+	for (auto & fsg : sc.freeShipsGroups_)
+	{
+		fsg.reset();
+	}
 }
 
 void PlaceShipScene::GoFight_Click(Scene &scene)
@@ -46,9 +59,28 @@ void PlaceShipScene::GoFight_Click(Scene &scene)
 	scene.game().setScene(scene.game().playScene);
 }
 
-void PlaceShipScene::onClick(SDL_Point p)
+void PlaceShipScene::onPress(SDL_Point p)
 {
-	Scene::onClick(p);
+	Scene::onPress(p);
+
+	mousePos_ = { -100, -100 };
+
+	for (auto &fsg : freeShipsGroups_)
+	{
+		if (fsg.pressed(p))
+		{
+			selected_ = &fsg;
+			return;
+		}
+	}
+}
+
+void PlaceShipScene::onRelease(SDL_Point p)
+{
+	Scene::onRelease(p);
+
+	if (selected_ == nullptr)
+		return;
 
 	for (auto &fsg : freeShipsGroups_)
 	{
@@ -56,15 +88,9 @@ void PlaceShipScene::onClick(SDL_Point p)
 		{
 			if (selected_ == &fsg)
 				selected_->rotate();
-			else
-				selected_ = &fsg;
-			std::cout << "select " << selected_->shipLength() << " decks ship\n";
-			return;
+			break;
 		}
 	}
-
-	if (!selected_)
-		return;
 
 	Player &player = game().player();
 	SDL_Point coord = player.coordAt(p);
@@ -76,21 +102,21 @@ void PlaceShipScene::onClick(SDL_Point p)
 		{
 			player.addShip(newShip);
 			selected_->decShipsCount();
-			selected_ = nullptr;
+//			if (selected_->shipsCount() == 0)
+			std::cout << "Placed " << newShip.length() << " decks ship at (" << newShip.x() << ", " << newShip.y() << ")\n";
 		}
 		else
 			std::cout << "Cann't place " << newShip.length() << " decks ship at (" << newShip.x() << ", " << newShip.y() << ")\n";
 	}
-
-
-//TODO: добавление кораблей
-//	SDL_Point coord;
-// 	if (player.MapCoordAt(p, coord))
-// 	{
-// 		if (player.PlaceShipPart(coord))
-// 			std::clog << "place ship part at (" << coord.x << ", " << coord.y << ")" << std::endl;
-// 		else
-// 			std::clog << "don't place ship part to (" << coord.x << ", " << coord.y << ")" << std::endl;
-// 	}
+	selected_ = nullptr;
 }
+
+void PlaceShipScene::onMouseMove(SDL_Point p)
+{
+	if (selected_ == nullptr)
+		return;
+
+	mousePos_ = p;
+}
+
 

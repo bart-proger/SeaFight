@@ -8,8 +8,8 @@ class MainMenuScene : public Scene
 public:
 	MainMenuScene(Game &);
 
-	void Init() override;
-	void Draw(Graphics &) override;
+	void init() override;
+	void draw(Graphics &) override;
 
 private:
 	static void PlayOnline_Click(Scene &);

@@ -11,7 +11,7 @@ SDLApplication::~SDLApplication()
 	SDL_Quit();
 }
 
-bool SDLApplication::Init(string title, int width, int height)
+bool SDLApplication::init(string title, int width, int height)
 {
 	bool result = true;
 
@@ -34,23 +34,23 @@ bool SDLApplication::Init(string title, int width, int height)
 		else
 		{
 			//Create renderer for window
-			if (graphics_.Init(window_))
+			if (graphics_.init(window_))
 			{
 				width_ = width;
 				height_ = height;
 
-				result = OnInit();
+				result = onInit();
 			}
 		}
 	}
 	return result;
 }
 
-void SDLApplication::Free()
+void SDLApplication::free()
 {
-	OnFree();
+	onFree();
 
-	graphics_.Free();
+	graphics_.free();
 	if (window_)
 	{
 		SDL_DestroyWindow(window_);
@@ -58,7 +58,7 @@ void SDLApplication::Free()
 	}
 }
 
-void SDLApplication::Run()
+void SDLApplication::run()
 {
 	SDL_Event e;
 	bool quit = false;
@@ -75,68 +75,42 @@ void SDLApplication::Run()
 			{
 				switch (e.type)
 				{
-					case SDL_KEYUP:
-						OnKeyEvent(/* TODO: OnKeyEvent params*/);
+// 					case SDL_KEYUP:
+// 						onKeyEvent(/* TODO: OnKeyEvent params*/);
+// 						break;
+					case SDL_MOUSEBUTTONDOWN:
+						onPress({ e.button.x, e.button.y });
+						break;
+					case SDL_FINGERDOWN:
+						onPress({ (int)(e.tfinger.x * width_), (int)(e.tfinger.y * height_) });
 						break;
 					case SDL_MOUSEBUTTONUP:
-						SDL_Point p = {e.button.x, e.button.y};
-						OnMouseEvent(p);
+						onRelease({ e.button.x, e.button.y });
 						break;
+					case SDL_FINGERUP:
+						onRelease({ (int)(e.tfinger.x * width_), (int)(e.tfinger.y * height_) });
+						break;
+					case SDL_MOUSEMOTION:
+						onMouseMove({ e.motion.x, e.motion.y });
+						break;
+					//TODO: finger motion!
 				}
-				
-				/*	switch(e.key.keysym.sym)
-				{
-				case SDLK_UP:
-				gCurrentSurface = gKeyPressSurfaces[ KEY_PRESS_SURFACE_UP ];
-				break;
-
-				case SDLK_DOWN:
-				gCurrentSurface = gKeyPressSurfaces[ KEY_PRESS_SURFACE_DOWN ];
-				break;
-
-				case SDLK_LEFT:
-				gCurrentSurface = gKeyPressSurfaces[ KEY_PRESS_SURFACE_LEFT ];
-				break;
-
-				case SDLK_RIGHT:
-				gCurrentSurface = gKeyPressSurfaces[ KEY_PRESS_SURFACE_RIGHT ];
-				break;
-
-				default:
-				gCurrentSurface = gKeyPressSurfaces[ KEY_PRESS_SURFACE_DEFAULT ];
-				break;
-				}*/
 			}
 		}
 
-		OnUpdate();
-		OnDraw();
+		onUpdate();
+		onDraw();
 
-        graphics_.Present();
+        graphics_.present();
 	}
-	Free();
+	free();
 }
 
-void SDLApplication::Quit()
+void SDLApplication::quit()
 {
 	SDL_Event e;
 	e.type = SDL_QUIT;
 	SDL_PushEvent(&e);
-}
-
-Graphics & SDLApplication::graphics()
-{
-	return graphics_;
-}
-
-int SDLApplication::width()
-{
-	return width_;
-}
-
-int SDLApplication::height()
-{
-	return height_;
 }
 
 //SDL_Surface *SDLApplication::LoadSurface(string fileName)

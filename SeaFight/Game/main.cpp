@@ -6,9 +6,9 @@ int SDL_main( int argc, char* args[] )
 {
 	Game app;
 
-	if (app.Init("SeaFight v0.3a", 640, 480))
+	if (app.init("SeaFight v0.3a", 640, 480))
 	{
-		app.Run();
+		app.run();
 	}
 #ifdef _DEBUG
 	else

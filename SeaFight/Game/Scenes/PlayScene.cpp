@@ -7,7 +7,7 @@ PlayScene::PlayScene(Game &game) :
 {
 }
 
-void PlayScene::Init()
+void PlayScene::init()
 {
 	//TODO: кнопка [Сдаться]
 	//SDL_Rect = { 250, 250,  };
@@ -15,16 +15,16 @@ void PlayScene::Init()
 		return;
 }
 
-void PlayScene::Update(float dt)
+void PlayScene::update(float dt)
 {
 	//TODO: angle += 0.05 * dt
 }
 
 double angle = 0;
 
-void PlayScene::Draw(Graphics &g)
+void PlayScene::draw(Graphics &g)
 {
-	Scene::Draw(g);
+	Scene::draw(g);
 
 	game().player().draw(g);
 	game().enemy().draw(g);
@@ -33,7 +33,7 @@ void PlayScene::Draw(Graphics &g)
 
 	if (game().state() == Game::WaitEnemy)
 	{
-		g.DrawSprite("wait_enemy", 415, 110, angle);
+		g.drawSprite("wait_enemy", 415, 110, angle);
 		if ((angle += 2) >= 360)
 			angle -= 360;
 		status = "Wait for enemy to connect...";
@@ -44,12 +44,12 @@ void PlayScene::Draw(Graphics &g)
 		status = "Enemy shot...";
 
 	if (font_.Loaded())
-		g.DrawText(font_, SDL_Color{ 0, 0, 0, 255 }, status, 30, 300);
+		g.drawText(font_, SDL_Color{ 0, 0, 0, 255 }, status, 30, 300);
 }
 
-void PlayScene::onClick(SDL_Point p)
+void PlayScene::onRelease(SDL_Point p)
 {
-	Scene::onClick(p);
+	Scene::onRelease(p);
 
 	if (game().state() == Game::MyStep)
 	{

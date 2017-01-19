@@ -17,7 +17,7 @@ Graphics::~Graphics()
 	IMG_Quit();
 }
 
-bool Graphics::Init(SDL_Window *window)
+bool Graphics::init(SDL_Window *window)
 {
 	renderer_ = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC); //TODO: vsync=on  ..off ?
 	if (!renderer_)
@@ -46,7 +46,7 @@ bool Graphics::Init(SDL_Window *window)
 	return true;
 }
 
-void Graphics::Free()
+void Graphics::free()
 {
 	if (renderer_)
 	{
@@ -55,12 +55,12 @@ void Graphics::Free()
 	}
 }
 
-void Graphics::Clear()
+void Graphics::clear()
 {
 	SDL_RenderClear(renderer_);
 }
 
-void Graphics::Present()
+void Graphics::present()
 {
 	SDL_RenderPresent(renderer_);
 }
@@ -112,7 +112,7 @@ void Graphics::DrawTextureClip(Texture &texture, SDL_Rect rect, SDL_Rect clip)
 }
 */
 
-bool Graphics::LoadTexture(string fileName, SDL_Color *transparent)
+bool Graphics::loadTexture(string fileName, SDL_Color *transparent)
 {
 	texture_.Free();
 
@@ -147,26 +147,26 @@ bool Graphics::LoadTexture(string fileName, SDL_Color *transparent)
 	return result;
 }
 
-void Graphics::AddSprite(string name, int x, int y, int w, int h)
+void Graphics::addSprite(string name, int x, int y, int w, int h)
 {
 	Sprite sprite = { x, y, w, h };
 	sprites_.insert(make_pair(name, sprite));
 }
 
-void Graphics::DrawSprite(string name, int x, int y)
+void Graphics::drawSprite(string name, int x, int y)
 {
 	Sprite s = sprites_[name];
 	SDL_Rect rect = { x, y, s.w, s.h };
 	SDL_RenderCopy(renderer_, texture_.sdlTexture_, &s, &rect);
 }
 
-void Graphics::DrawSprite(string name, SDL_Rect rect)
+void Graphics::drawSprite(string name, SDL_Rect rect)
 {
 	Sprite s = sprites_[name];
 	SDL_RenderCopy(renderer_, texture_.sdlTexture_, &s, &rect);
 }
 
-void Graphics::DrawSprite(string name, int x, int y, double angle)
+void Graphics::drawSprite(string name, int x, int y, double angle)
 {
 	Sprite s = sprites_[name];
 	SDL_Rect rect = { x, y, s.w, s.h };
@@ -174,7 +174,7 @@ void Graphics::DrawSprite(string name, int x, int y, double angle)
 	SDL_RenderCopyEx(renderer_, texture_.sdlTexture_, &s, &rect, angle, &center, SDL_FLIP_NONE);
 }
 
-void Graphics::DrawSprite(string name, int x, int y, double angle, int centerX, int centerY)
+void Graphics::drawSprite(string name, int x, int y, double angle, int centerX, int centerY)
 {
 	Sprite s = sprites_[name];
 	SDL_Rect rect = { x, y, s.w, s.h };
@@ -182,7 +182,7 @@ void Graphics::DrawSprite(string name, int x, int y, double angle, int centerX, 
 	SDL_RenderCopyEx(renderer_, texture_.sdlTexture_, &s, &rect, angle, &center, SDL_FLIP_NONE);
 }
 
-void Graphics::DrawText(const Font &font, SDL_Color color, string text, int x, int y)
+void Graphics::drawText(const Font &font, SDL_Color color, string text, int x, int y)
 {
 	//TODO: вывод русского текста
 	SDL_Surface* surf = TTF_RenderUTF8_Blended(font.sdlFont_, text.c_str(), color);

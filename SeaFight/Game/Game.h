@@ -41,12 +41,14 @@ public:
 	PlayScene playScene;
 
 private:
-	bool OnInit() override;
-	void OnFree() override;
-	void OnUpdate() override;
-	void OnDraw() override;
-	void OnKeyEvent() override;
-	void OnMouseEvent(SDL_Point ) override;
+	bool onInit() override;
+	void onFree() override;
+	void onUpdate() override;
+	void onDraw() override;
+//	void onKeyEvent() override;
+	void onPress(SDL_Point ) override;
+	void onRelease(SDL_Point ) override;
+	void onMouseMove(SDL_Point) override;
 
 	Scene *scene_;
 	PlayState state_;

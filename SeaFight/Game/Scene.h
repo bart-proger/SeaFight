@@ -9,19 +9,20 @@ class Scene
 public:
 	Scene(Game &);
 	virtual ~Scene() {}
-	virtual void Init() {}
-	virtual void Draw(Graphics &);
-	virtual void Update(float dt) {}
-	virtual void onClick(SDL_Point );
-	virtual void onPress(SDL_Point) {} //TODO:
-	virtual void onRelease(SDL_Point) {} //TODO:
+	virtual void init() {}
+	virtual void draw(Graphics &);
+	virtual void update(float dt) {}
+//	virtual void onClick(SDL_Point );
+	virtual void onPress(SDL_Point );
+	virtual void onRelease(SDL_Point );
+	virtual void onMouseMove(SDL_Point );
 	Game & game();
 
 	typedef void (*ButtonClickFunc)(Scene &);
 	template<typename MemberFunc>
-	void AddButton(string sprite, SDL_Rect rect, MemberFunc clickFunc)
+	void addButton(string sprite, SDL_Rect rect, MemberFunc clickFunc)
 	{
-		AddButton_(sprite, rect, static_cast<ButtonClickFunc>(clickFunc));
+		addButton_(sprite, rect, static_cast<ButtonClickFunc>(clickFunc));
 	}
 
 private:
@@ -31,16 +32,18 @@ private:
 			sprite(asprite),
 			rect(arect),
 			visible(true),
+			pressed(false),
 			onClick(func) {}
 
 		string sprite;
 		SDL_Rect rect;
 		bool visible;
+		bool pressed;
 		Scene::ButtonClickFunc onClick;
 	};
 
 	Game &game_;
 	std::vector<Button> buttons_;
 
-	void AddButton_(string sprite, SDL_Rect rect, ButtonClickFunc clickFunc);
+	void addButton_(string sprite, SDL_Rect rect, ButtonClickFunc clickFunc);
 };

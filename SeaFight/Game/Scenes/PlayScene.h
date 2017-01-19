@@ -7,14 +7,14 @@ class PlayScene : public Scene
 public:
 	PlayScene(Game &);
 
-	void Init() override;
-	void Update(float dt) override;
-	void Draw(Graphics &) override;
+	void init() override;
+	void update(float dt) override;
+	void draw(Graphics &) override;
 	
 // 	static void ClearMapClick(Scene &);
 // 	static void GoFightClick(Scene &);
 // 
- 	void onClick(SDL_Point );
+ 	void onRelease(SDL_Point );
 private:
 	Font font_;
 };

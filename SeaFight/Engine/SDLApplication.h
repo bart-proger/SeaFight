@@ -15,23 +15,25 @@ class SDLApplication
 public:
 	SDLApplication();
 	virtual ~SDLApplication();
-	bool Init(string title, int width, int height);
-	void Free();
-	void Run();
-	void Quit();
+	bool init(string title, int width, int height);
+	void free();
+	void run();
+	void quit();
 
-	Graphics & graphics();
+	Graphics & graphics() { return graphics_; }
 	//Network & network();
-	int width();
-	int height();
+	int width() const { return width_; }
+	int height() const { return height_; }
 
 protected:
-	virtual bool OnInit() { return true; }
-	virtual void OnFree() {}
-	virtual void OnUpdate() {}
-	virtual void OnDraw() {}
-	virtual void OnKeyEvent() {}
-	virtual void OnMouseEvent(SDL_Point ) {}
+	virtual bool onInit() { return true; }
+	virtual void onFree() {}
+	virtual void onUpdate() {}
+	virtual void onDraw() {}
+//	virtual void onKeyEvent() {}
+	virtual void onPress(SDL_Point) {}
+	virtual void onRelease(SDL_Point ) {}
+	virtual void onMouseMove(SDL_Point dp) {}
 
 private:
 	int width_;

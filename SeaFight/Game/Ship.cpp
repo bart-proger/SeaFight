@@ -113,7 +113,7 @@ void Ship::draw(Graphics &g, SDL_Point offset)
 	ss << "ship" << length_;
 	int x = offset.x + pos_.x * DECK_SIZE,
 		y = offset.y + pos_.y * DECK_SIZE;
-	g.DrawSprite(ss.str(), x, y, dir_*90/* + angle*/, DECK_SIZE / 2, DECK_SIZE / 2);
+	g.drawSprite(ss.str(), x, y, dir_*90/* + angle*/, DECK_SIZE / 2, DECK_SIZE / 2);
 /*
 	if ((angle += 2) >= 360)
 		angle -= 360;*/

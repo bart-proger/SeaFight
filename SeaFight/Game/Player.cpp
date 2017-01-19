@@ -122,7 +122,7 @@ SDL_Point Player::coordAt(SDL_Point p)
 
 void Player::draw(Graphics & g)
 {
-	g.DrawSprite("sea", drawOffset_.x, drawOffset_.y);
+	g.drawSprite("sea", drawOffset_.x, drawOffset_.y);
 
 	for (auto &s : ships_)
 	{
@@ -137,17 +137,17 @@ void Player::draw(Graphics & g)
 			switch (enemyShots_[j][i])
 			{
 				case ShotType::HIT:
-					g.DrawSprite("hit", x, y);
+					g.drawSprite("hit", x, y);
 					break;
 				case ShotType::MISS:
-					g.DrawSprite("miss", x, y);
+					g.drawSprite("miss", x, y);
 					break;
 				case ShotType::FREE:
-					g.DrawSprite("free", x, y);
+					g.drawSprite("free", x, y);
 				default: //NONE
 					break;
 			}
 		}
-	g.DrawSprite("coord_abc", drawOffset_.x, drawOffset_.y - 30);
-	g.DrawSprite("coord_123", drawOffset_.x - 30, drawOffset_.y);
+	g.drawSprite("coord_abc", drawOffset_.x, drawOffset_.y - 30);
+	g.drawSprite("coord_123", drawOffset_.x - 30, drawOffset_.y);
 }

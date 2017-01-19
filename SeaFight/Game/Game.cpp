@@ -135,39 +135,39 @@ void Game::parseCommands()
 	}
 }
 
-bool Game::OnInit()
+bool Game::onInit()
 {
 	if (!Network::Init())
 		return false;
 
 	Graphics &g = graphics();
 
-	if (!g.LoadTexture("data/ui.tga"))
+	if (!g.loadTexture("data/ui.tga"))
 		return false;
 
-	g.AddSprite("btn_PlayOnline", 0, 0, 201, 44);
-	g.AddSprite("btn_PlayVsAI", 0, 44, 324, 44);
-	g.AddSprite("btn_Quit", 0, 88, 150, 44);
-	g.AddSprite("btn_ClearMap", 0, 132, 143, 44);
-	g.AddSprite("btn_GoFight", 0, 176, 107, 44);
-	g.AddSprite("btn_Surrender", 0, 220, 155, 44);
-	g.AddSprite("sea", 0, 272, 240, 240);
-	g.AddSprite("ship", 166, 242, 24, 24);
-	g.AddSprite("hit", 190, 242, 24, 24);
-	g.AddSprite("miss", 214, 242, 24, 24);
-	g.AddSprite("free", 238, 242, 24, 24);
-	g.AddSprite("coord_abc", 201, 0, 235, 30);
-	g.AddSprite("coord_123", 482, 0, 30, 240);
-	g.AddSprite("wait_enemy", 332, 32, 94, 94);
+	g.addSprite("btn_PlayOnline", 0, 0, 201, 44);
+	g.addSprite("btn_PlayVsAI", 0, 44, 324, 44);
+	g.addSprite("btn_Quit", 0, 88, 150, 44);
+	g.addSprite("btn_ClearMap", 0, 132, 143, 44);
+	g.addSprite("btn_GoFight", 0, 176, 107, 44);
+	g.addSprite("btn_Surrender", 0, 220, 155, 44);
+	g.addSprite("sea", 0, 272, 240, 240);
+	g.addSprite("ship", 166, 242, 24, 24);
+	g.addSprite("hit", 190, 242, 24, 24);
+	g.addSprite("miss", 214, 242, 24, 24);
+	g.addSprite("free", 238, 242, 24, 24);
+	g.addSprite("coord_abc", 201, 0, 235, 30);
+	g.addSprite("coord_123", 482, 0, 30, 240);
+	g.addSprite("wait_enemy", 332, 32, 94, 94);
 
-	g.AddSprite("ship4", 250, 270, 96, 24);
-	g.AddSprite("ship3", 250, 300, 72, 24);
-	g.AddSprite("ship2", 250, 330, 48, 24);
-	g.AddSprite("ship1", 250, 360, 24, 24);
+	g.addSprite("ship4", 250, 270, 96, 24);
+	g.addSprite("ship3", 250, 300, 72, 24);
+	g.addSprite("ship2", 250, 330, 48, 24);
+	g.addSprite("ship1", 250, 360, 24, 24);
 
-	mainMenuScene.Init();
-	placeShipScene.Init();
-	playScene.Init();
+	mainMenuScene.init();
+	placeShipScene.init();
+	playScene.init();
 
 	player_.setDrawOffset(35, 35);
 	enemy_.setDrawOffset(340, 35);
@@ -176,29 +176,39 @@ bool Game::OnInit()
 	return true;
 }
 
-void Game::OnFree()
+void Game::onFree()
 {
 	client_.Disconnect();
 	receiveThread_.Free();
 	Network::Free();
 }
 
-void Game::OnKeyEvent()
+// void Game::onKeyEvent()
+// {
+// }
+
+void Game::onPress(SDL_Point p)
 {
+	scene_->onPress(p);
 }
 
-void Game::OnMouseEvent(SDL_Point p)
+void Game::onRelease(SDL_Point p)
 {
-	scene_->onClick(p);
+	scene_->onRelease(p);
 }
 
-void Game::OnUpdate()
+void Game::onMouseMove(SDL_Point p)
+{
+	scene_->onMouseMove(p);
+}
+
+void Game::onUpdate()
 {
 	parseCommands();
 }
 
-void Game::OnDraw()
+void Game::onDraw()
 {
-	graphics().Clear();
-	scene().Draw(graphics());
+	graphics().clear();
+	scene().draw(graphics());
 }
