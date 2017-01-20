@@ -25,7 +25,7 @@ public:
 	string mapData() const;
 
 	void setDrawOffset(int x, int y);
-	SDL_Point coordAt(SDL_Point p);
+	SDL_Point * coordAt(SDL_Point p);
 	void draw(Graphics & g);
 protected:
 	std::vector<Ship> ships_;

@@ -14,8 +14,10 @@ public:
 // 	static void ClearMapClick(Scene &);
 // 	static void GoFightClick(Scene &);
 // 
- 	void onRelease(SDL_Point );
+ 	void onRelease(SDL_Point ) override;
+	void onMouseMove(SDL_Point) override;
 private:
 	Font font_;
+	SDL_Point * aimPos_;
 };
 

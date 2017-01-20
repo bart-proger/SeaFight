@@ -108,16 +108,18 @@ void Player::setDrawOffset(int x, int y)
 	drawOffset_.y = y;
 }
 
-SDL_Point Player::coordAt(SDL_Point p)
+SDL_Point * Player::coordAt(SDL_Point p)
 {
+	static SDL_Point coord;
 	int x = (p.x - drawOffset_.x) / Ship::DECK_SIZE,
 		y = (p.y - drawOffset_.y) / Ship::DECK_SIZE;
 
 	if (x >= 0 && x < 10 && y >= 0 && y < 10)
 	{
-		return SDL_Point{ x, y };
+		coord = { x , y };
+		return &coord;
 	}
-	return SDL_Point{ -1, -1 };
+	return nullptr;
 }
 
 void Player::draw(Graphics & g)
