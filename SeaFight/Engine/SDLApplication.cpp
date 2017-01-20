@@ -93,7 +93,9 @@ void SDLApplication::run()
 					case SDL_MOUSEMOTION:
 						onMouseMove({ e.motion.x, e.motion.y });
 						break;
-					//TODO: finger motion!
+					case SDL_FINGERMOTION:
+						onMouseMove({ (int)(e.tfinger.x * width_), (int)(e.tfinger.y * height_) });
+						break;
 				}
 			}
 		}
