@@ -16,13 +16,15 @@ class Scene;
 class Game: public SDLApplication
 {
 public:
-	enum PlayState { WaitEnemy, /*ReadyPlay,*/ MyStep, EnemyStep };
+	enum PlayState { WaitEnemy, /*ReadyPlay,*/ MyStep, EnemyStep, Win, Lose };
+//	enum PlayState;
 
 	Game();
 
-	void setScene(Scene &value) {	scene_ = &value; }
 	Scene & scene() { return *scene_; }
-	Game::PlayState state() const { return state_; }
+	void setScene(Scene &value) {	scene_ = &value; }
+	PlayState state() const { return state_; }
+	void setState(PlayState state);
 
 	Player & player() { return player_; }
 	Enemy & enemy() { return enemy_; }
@@ -62,6 +64,8 @@ private:
 	std::queue<string> commands_;
 };
 
+//enum Game::PlayState { WaitEnemy, /*ReadyPlay,*/ MyStep, EnemyStep, Win, Lose };
+
 #define CMD_FIRST		">first"
 #define CMD_SECOND		">second"
 #define CMD_HIT			">hit"	//:x:y
@@ -71,9 +75,10 @@ private:
 #define CMD_KILL		">kill"
 #define CMD_GET_KILL	">get_kill"
 #define CMD_ENEMY_DISCONNECTED ">enemy_disconnected"
-//TODO: #define CMD_WIN , CMD_LOSE
+#define CMD_WIN			">win"
+#define CMD_LOSE		">lose"	//:x:y:len,x:y:len,... - оставшиеся корабли
 
 #define CMD_READY_PLAY	">map"	//:01001101...
 #define CMD_FIRE		">fire"	//:x:y
 
-#define CMD_OK			">ok"
+#define CMD_OK			">ok"	// опрос от сервера - игрок онлайн?

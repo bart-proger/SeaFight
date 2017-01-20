@@ -1,8 +1,10 @@
 #pragma once
 #include "../Engine/Texture.h"
 #include <vector>
+//#include "Game.h"
 
 class Game;
+//enum Game::PlayState;
 
 class Scene
 {
@@ -15,7 +17,8 @@ public:
 //	virtual void onClick(SDL_Point );
 	virtual void onPress(SDL_Point );
 	virtual void onRelease(SDL_Point );
-	virtual void onMouseMove(SDL_Point );
+	virtual void onMouseMove(SDL_Point) {}
+	virtual void onChangeGameState(/*Game::PlayState*/) {}
 	Game & game();
 
 	typedef void (*ButtonClickFunc)(Scene &);
@@ -24,6 +27,9 @@ public:
 	{
 		addButton_(sprite, rect, static_cast<ButtonClickFunc>(clickFunc));
 	}
+
+	void showButton(string sprite);
+	void hideButton(string sprite);
 
 private:
 	struct Button

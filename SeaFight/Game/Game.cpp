@@ -21,6 +21,13 @@ Game::Game():
 {
 }
 
+void Game::setState(PlayState state)
+{
+	state_ = state;
+	if (scene_ != nullptr)
+		scene_->onChangeGameState(/*state_*/);
+}
+
 bool Game::connectToServer()
 {
 	if (!client_.Connect(SERVER_IP, SERVER_PORT))
@@ -83,54 +90,64 @@ void Game::parseCommands()
 			args.push_back(item);
 		}
 
+		SDL_Point coord{-1, -1};
+		if (args.size() >= 3)
+		{
+			coord = { atoi(args[1].c_str()), atoi(args[2].c_str()) };
+		}
+
 		if (args[0] == CMD_FIRST)
 		{
-			state_ = MyStep;
+			setState(PlayState::MyStep);
 		}
 		else if (args[0] == CMD_SECOND)
 		{
-			state_ = EnemyStep;
+			setState(PlayState::EnemyStep);
 		}
 		else if (args[0] == CMD_ENEMY_DISCONNECTED)
 		{
 			//TODO: show message if enemy disconnected
+			setState(PlayState::WaitEnemy);
 			setScene(placeShipScene);
-			state_ = PlayState::WaitEnemy;
 			player_.clearEnemyShots();
 
 			enemy_.clearEnemyShots();
 			enemy_.clearShips();
 		}
-		else if (args.size() >= 3)
+		else if (args[0] == CMD_HIT)
 		{
-			SDL_Point coord{ atoi(args[1].c_str()), atoi(args[2].c_str()) };
-
-			if (args[0] == CMD_HIT)
-			{
-				enemy_.addHit(coord);
-			}
-			else if (args[0] == CMD_MISS)
-			{
-				enemy_.addMiss(coord);
-				state_ = PlayState::EnemyStep;
-			}
-			else if (args[0] == CMD_KILL)
-			{
-				enemy_.addKill(coord);
-			}
-			else if (args[0] == CMD_GET_HIT)
-			{
-				player_.addHit(coord);
-			}
-			else if (args[0] == CMD_GET_MISS)
-			{
-				player_.addMiss(coord);
-				state_ = PlayState::MyStep;
-			}
-			else if (args[0] == CMD_GET_KILL)
-			{
-				player_.addKill(coord);
-			}
+			enemy_.addHit(coord);
+		}
+		else if (args[0] == CMD_MISS)
+		{
+			enemy_.addMiss(coord);
+			setState(PlayState::EnemyStep);
+		}
+		else if (args[0] == CMD_KILL)
+		{
+			enemy_.addKill(coord);
+		}
+		else if (args[0] == CMD_GET_HIT)
+		{
+			player_.addHit(coord);
+		}
+		else if (args[0] == CMD_GET_MISS)
+		{
+			player_.addMiss(coord);
+			setState(PlayState::MyStep);
+		}
+		else if (args[0] == CMD_GET_KILL)
+		{
+			player_.addKill(coord);
+		}
+		else if (args[0] == CMD_WIN)
+		{
+			setState(PlayState::Win);
+		}
+		else if (args[0] == CMD_LOSE)
+		{
+			setState(PlayState::Lose);
+			//TODO: вывод оставшихся кораблей
 		}
 	}
 }
@@ -166,6 +183,9 @@ bool Game::onInit()
 	g.addSprite("ship1", 250, 360, 24, 24);
 
 	g.addSprite("aim", 262, 242, 24, 24);
+	g.addSprite("btn_surrender", 194, 88, 44, 44);
+	g.addSprite("btn_fire", 150, 88, 44, 44);
+	g.addSprite("btn_continue", 150, 132, 44, 44);
 
 	mainMenuScene.init();
 	placeShipScene.init();
@@ -207,6 +227,8 @@ void Game::onMouseMove(SDL_Point p)
 void Game::onUpdate()
 {
 	parseCommands();
+	//TODO: вычислить прошедшее время dt
+	scene_->update(0.0f);
 }
 
 void Game::onDraw()

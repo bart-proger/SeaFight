@@ -17,7 +17,7 @@ public:
 	Font();
 	~Font();
 
-	bool LoadFromFile(string fileName);
+	bool loadFromFile(string fileName);
 	void Free();
 	bool Loaded() const;
 

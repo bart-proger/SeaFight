@@ -13,8 +13,8 @@ void MainMenuScene::init()
 	SDL_Rect r1 = { 136, 97, 201, 44 };
 	addButton("btn_PlayOnline", r1, PlayOnline_Click);
 
-	SDL_Rect r2 = { 75, 150, 324, 44 };
-	addButton("btn_PlayVsAI", r2, PlayVsAI_Click);
+// 	SDL_Rect r2 = { 75, 150, 324, 44 };
+// 	addButton("btn_PlayVsAI", r2, PlayVsAI_Click);
 
 	SDL_Rect r3 = { 165, 237, 150, 44 };
 	addButton("btn_Quit", r3, Quit_Click);
@@ -37,7 +37,7 @@ void MainMenuScene::PlayOnline_Click(Scene &scene)
 	}
 	else
 	{
-		//TODO: показать сообщение "Сервер не доступен"
+		//TODO: РїРѕРєР°Р·Р°С‚СЊ СЃРѕРѕР±С‰РµРЅРёРµ "РЎРµСЂРІРµСЂ РЅРµ РґРѕСЃС‚СѓРїРµРЅ"
 	}
 }
 

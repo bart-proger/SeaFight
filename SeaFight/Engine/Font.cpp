@@ -12,7 +12,7 @@ Font::~Font()
 	Free();
 }
 
-bool Font::LoadFromFile(string fileName)
+bool Font::loadFromFile(string fileName)
 {
 	//Open the font
 	sdlFont_ = TTF_OpenFont(fileName.c_str(), 28);

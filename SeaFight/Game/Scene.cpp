@@ -10,7 +10,8 @@ void Scene::draw(Graphics &g)
 {
 	for (const auto &b: buttons_)
 	{
-		g.drawSprite(b.sprite, b.rect);
+		if (b.visible)
+			g.drawSprite(b.sprite, b.rect);
 	}
 }
 
@@ -33,7 +34,7 @@ void Scene::onPress(SDL_Point p)
 {
 	for (auto &b : buttons_)
 	{
-		if (SDL_PointInRect(&p, &b.rect))
+		if (b.visible && SDL_PointInRect(&p, &b.rect))
 		{
 			b.pressed = true;
 //			if (b.onPress)
@@ -47,7 +48,7 @@ void Scene::onRelease(SDL_Point p)
 {
 	for (auto &b : buttons_)
 	{
-		if (SDL_PointInRect(&p, &b.rect))
+		if (b.visible && SDL_PointInRect(&p, &b.rect))
 		{
 			if (b.pressed && b.onClick)
 				b.onClick(*this);
@@ -59,10 +60,6 @@ void Scene::onRelease(SDL_Point p)
 	}
 }
 
-void Scene::onMouseMove(SDL_Point p)
-{
-}
-
 Game &Scene::game()
 {
 	return game_;
@@ -71,4 +68,28 @@ Game &Scene::game()
 void Scene::addButton_(string sprite, SDL_Rect rect, ButtonClickFunc clickFunc)
 {
 	buttons_.push_back(Button(sprite, rect, clickFunc));
+}
+
+void Scene::showButton(string sprite)
+{
+	for (auto &b : buttons_)
+	{
+		if (b.sprite == sprite)
+		{
+			b.visible = true;
+			break;
+		}
+	}
+}
+
+void Scene::hideButton(string sprite)
+{
+	for (auto &b : buttons_)
+	{
+		if (b.sprite == sprite)
+		{
+			b.visible = false;
+			break;
+		}
+	}
 }
