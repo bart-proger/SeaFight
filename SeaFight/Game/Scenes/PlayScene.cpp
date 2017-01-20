@@ -9,7 +9,7 @@ PlayScene::PlayScene(Game &game) :
 
 void PlayScene::init()
 {
-	//TODO: ������ [�������]
+	//TODO: кнопка [Сдаться]
 	//SDL_Rect = { 250, 250,  };
 	if (!font_.LoadFromFile("data/Skellyman.ttf"))
 		return;
@@ -36,17 +36,21 @@ void PlayScene::draw(Graphics &g)
 		g.drawSprite("wait_enemy", 415, 110, angle);
 		if ((angle += 2) >= 360)
 			angle -= 360;
-		status = "Wait for enemy to connect...";
+		status = "Ожидание подключения соперника...";
 	}
 	else if (game().state() == Game::MyStep)
-		status = "Fire!!!";
+		status = "Огонь!!!";
 	else if (game().state() == Game::EnemyStep)
-		status = "Enemy shot...";
+		status = "Выстрел соперника...";
 
 	if (font_.Loaded())
 		g.drawText(font_, SDL_Color{ 0, 0, 0, 255 }, status, 30, 300);
 
-	g.drawSprite("aim", aimPos_.x, aimPos_.y);
+	if (aimPos_ != nullptr && game().state() == Game::MyStep)
+	{
+		SDL_Point of = game().enemy().drawOffset();
+		g.drawSprite("aim", aimPos_->x*Ship::DECK_SIZE + of.x, aimPos_->y*Ship::DECK_SIZE + of.y);
+	}
 }
 
 void PlayScene::onRelease(SDL_Point p)
@@ -55,12 +59,14 @@ void PlayScene::onRelease(SDL_Point p)
 
 	if (game().state() == Game::MyStep)
 	{
-		Player &enemy = game().enemy();
-		SDL_Point * aim = enemy.coordAt(p);
-		if (aim != nullptr)
+//		Player &enemy = game().enemy();
+//		aimPos_ = game().enemy().coordAt(p);
+		if (aimPos_ != nullptr)
 		{
-			game().fire(*coord);
-			std::clog << "fire to (" << coord->x << ", " << coord->y << ") ===> ";
+//TODO: выстрел после нажатия кнопки огонь [-=O]
+			game().fire(*aimPos_);
+			std::clog << "fire to (" << aimPos_->x << ", " << aimPos_->y << ") ===> ";
+			aimPos_ = nullptr;
 		}
 	}
 }
@@ -69,6 +75,7 @@ void PlayScene::onMouseMove(SDL_Point p)
 {
 	Scene::onMouseMove(p);
 
+	aimPos_ = nullptr;
 	if (game().state() == Game::MyStep)
 	{
 		aimPos_ = game().enemy().coordAt(p);

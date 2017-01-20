@@ -24,6 +24,7 @@ public:
 	virtual void addKill(SDL_Point coord);
 	string mapData() const;
 
+	SDL_Point drawOffset() const { return drawOffset_; }
 	void setDrawOffset(int x, int y);
 	SDL_Point * coordAt(SDL_Point p);
 	void draw(Graphics & g);

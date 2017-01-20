@@ -6,7 +6,7 @@ int SDL_main( int argc, char* args[] )
 {
 	Game app;
 
-	if (app.init("SeaFight v0.3a", 640, 480))
+	if (app.init("SeaFight v0.3a бла бла бла", 640, 480))
 	{
 		app.run();
 	}

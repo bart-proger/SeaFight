@@ -165,6 +165,8 @@ bool Game::onInit()
 	g.addSprite("ship2", 250, 330, 48, 24);
 	g.addSprite("ship1", 250, 360, 24, 24);
 
+	g.addSprite("aim", 262, 242, 24, 24);
+
 	mainMenuScene.init();
 	placeShipScene.init();
 	playScene.init();

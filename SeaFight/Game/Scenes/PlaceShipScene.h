@@ -14,7 +14,7 @@ public:
 private:
 	static void ClearMap_Click(Scene &);
 	static void GoFight_Click(Scene &);
-
+	 
 	void onPress(SDL_Point) override;
 	void onRelease(SDL_Point ) override;
 	void onMouseMove(SDL_Point p) override;

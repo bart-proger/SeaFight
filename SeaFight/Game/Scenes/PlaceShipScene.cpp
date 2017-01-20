@@ -93,10 +93,10 @@ void PlaceShipScene::onRelease(SDL_Point p)
 	}
 
 	Player &player = game().player();
-	SDL_Point coord = player.coordAt(p);
-	if (coord.x > -1 && coord.y > -1)
+	SDL_Point * c = player.coordAt(p);
+	if (c != nullptr)
 	{
-		Ship newShip(selected_->shipLength(), coord, selected_->shipDir());
+		Ship newShip(selected_->shipLength(), *c, selected_->shipDir());
 
 		if (player.checkShipPosition(newShip))
 		{
@@ -115,7 +115,6 @@ void PlaceShipScene::onMouseMove(SDL_Point p)
 {
 	if (selected_ == nullptr)
 		return;
-
 	mousePos_ = p;
 }
 
