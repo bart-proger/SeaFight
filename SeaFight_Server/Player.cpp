@@ -9,7 +9,8 @@ Player::Player(Server* server):
 	server_(server),
 //	client_(client),//,
 	enemy_(NULL),
-	WinThread()
+	WinThread(),
+	shipDecksLeft_(0)
 {
 	std::stringstream ss;
 	ss << "player" << ((int)this % 1000);
@@ -67,16 +68,21 @@ bool Player::isDisconnected() const
 
 void Player::InitMap(string data)
 {
+	shipDecksLeft_ = 0;
 	for (int y = 0; y < MAP_HEIGHT; ++y)
 		for (int x = 0; x < MAP_WIDTH; ++x)
 		{
 			if (data[y*MAP_WIDTH + x] == '1')
+			{
 				map_[y][x].hasShip = true;
+				++shipDecksLeft_;
+			}
 		}
 }
 
 void Player::ClearMap()
 {
+	shipDecksLeft_ = 0;
 	for (int y = 0; y < 10; ++y)
 		for (int x = 0; x < 10; ++x)
 		{
@@ -93,12 +99,24 @@ void Player::fire(int x, int y)
 	if (enemy_->map_[y][x].hasShip && !enemy_->map_[y][x].attacked)
 	{
 		enemy_->map_[y][x].attacked = true;
+		--enemy_->shipDecksLeft_;
 
 		if (enemy_->shipKilledAt(x, y))		// kill
 		{
 			client_.Send(CMD_KILL + ssArgs.str());
 			enemy_->client().Send(CMD_GET_KILL + ssArgs.str());
 			std::cout << name_ << " -KILL ship " << ssArgs.str() << std::endl;
+
+			if (enemy_->shipDecksLeft_ == 0) // win!
+			{
+				client_.Send(CMD_WIN);
+				enemy_->enemy_ = NULL;
+				enemy_->client().Send(CMD_LOSE /*+ args*/);  //TODO: Ð¿ÐµÑ€ÐµÐ´Ð°Ñ‚ÑŒ Ð¾ÑÑ‚Ð°Ð²ÑˆÐ¸ÐµÑÑ ÐºÐ¾Ñ€Ð°Ð±Ð»Ð¸
+				enemy_->state_ = PlayState::Connected;
+				enemy_ = NULL;
+				state_ = PlayState::Connected;
+				std::cout << name_ << " -WINNER" << std::endl;
+			}
 		}
 		else					// hit
 		{
@@ -111,10 +129,20 @@ void Player::fire(int x, int y)
 	{
 		client_.Send(CMD_MISS + ssArgs.str());	
 		enemy_->client().Send(CMD_GET_MISS + ssArgs.str());
-		std::cout << name_ << " -MISS ship " << ssArgs.str() << std::endl;
+		std::cout << name_ << " -MISS by ships " << ssArgs.str() << std::endl;
 
 		PlayEnemy();
 	}
+}
+
+void Player::surrender()
+{
+	enemy_->enemy_ = NULL;
+	enemy_->client().Send(CMD_ENEMY_SURR);
+	enemy_->state_ = PlayState::Connected;
+	enemy_ = NULL;
+	state_ = PlayState::Connected;
+	std::cout << name_ << " -SURRENDER" << std::endl;
 }
 
 void Player::PlayEnemy()
@@ -196,15 +224,19 @@ void Player::ParseCommand(string cmd)
 
 	if (state_ == PlayState::Connected && args[0] == CMD_READY_PLAY)
 	{
+		ClearMap();
 		InitMap(args[1]);
 
 		state_ = PlayState::ReadyPlay;
 
 		WaitNextEnemy();
 	}
-	else if (state_ == PlayState::MyStep && args[0] == CMD_FIRE)
+	else if (state_ == PlayState::MyStep)
 	{
-		fire(atoi(args[1].c_str()), atoi(args[2].c_str()));
+		if (args[0] == CMD_FIRE)
+			fire(atoi(args[1].c_str()), atoi(args[2].c_str()));
+		else if (args[0] == CMD_SURRENDER)
+			surrender();
 	}
 }
 
@@ -242,7 +274,7 @@ void Player::Process()				//------- ReceiveThread
 bool Player::shipKilledAt(int x, int y)
 {
 	int xx, yy;
-	// ïîèñê ñîñåäíèõ ïîäáèòûõ ïàëóá êîðàáëÿ ïî ãîðèçîíòàëè
+	// Ð¿Ð¾Ð¸ÑÐº ÑÐ¾ÑÐµÐ´Ð½Ð¸Ñ… Ð¿Ð¾Ð´Ð±Ð¸Ñ‚Ñ‹Ñ… Ð¿Ð°Ð»ÑƒÐ± ÐºÐ¾Ñ€Ð°Ð±Ð»Ñ Ð¿Ð¾ Ð³Ð¾Ñ€Ð¸Ð·Ð¾Ð½Ñ‚Ð°Ð»Ð¸
 	for (xx = x - 1; xx >= 0; --xx)
 	{
 		if (map_[y][xx].hasShip)
@@ -263,7 +295,7 @@ bool Player::shipKilledAt(int x, int y)
 		else
 			break;
 	}
-	// ..ïî âåðòèêàëè
+	// ..Ð¿Ð¾ Ð²ÐµÑ€Ñ‚Ð¸ÐºÐ°Ð»Ð¸
 	for (yy = y - 1; yy >= 0; --yy)
 	{
 		if (map_[yy][x].hasShip)

@@ -3,14 +3,13 @@
 #include <iostream>
 
 PlayScene::PlayScene(Game &game) :
-	Scene(game)
+	Scene(game),
+	moveAim_(false)
 {
 }
 
 void PlayScene::init()
 {
-	//TODO: кнопка [Сдаться]/[Новое сражение]
-	//SDL_Rect = { 250, 250,  };
 	if (!font_.loadFromFile("data/Skellyman.ttf"))
 		return;
 
@@ -44,12 +43,9 @@ void PlayScene::draw(Graphics &g)
 			if ((angle += 2) >= 360)
 				angle -= 360;
 			break;
-		case Game::PlayState::MyStep:
-			if (aimPos_ != nullptr)
-			{
+		case Game::PlayState::MyShot:
 				SDL_Point of = game().enemy().drawOffset();
-				g.drawSprite("aim", aimPos_->x*Ship::DECK_SIZE + of.x, aimPos_->y*Ship::DECK_SIZE + of.y);
-			}
+				g.drawSprite("aim", aimPos_.x*Ship::DECK_SIZE + of.x, aimPos_.y*Ship::DECK_SIZE + of.y);
 			break;
 	}
 
@@ -59,21 +55,31 @@ void PlayScene::draw(Graphics &g)
 	Scene::draw(g);
 }
 
+void PlayScene::onShow()
+{
+	moveAim_ = false;
+	aimPos_ = { -100, -100 };
+	game().setState(Game::PlayState::WaitEnemy);
+}
+
+void PlayScene::onPress(SDL_Point p)
+{
+	Scene::onPress(p);
+
+	moveAim_ = true;
+}
+
 void PlayScene::onRelease(SDL_Point p)
 {
 	Scene::onRelease(p);
 
-	if (game().state() == Game::MyStep)
+	moveAim_ = false;
+
+	if (game().state() == Game::MyShot)
 	{
-//		Player &enemy = game().enemy();
-//		aimPos_ = game().enemy().coordAt(p);
-		if (aimPos_ != nullptr)
-		{
-//TODO: выстрел после нажатия кнопки огонь [-=O]
-			game().fire(*aimPos_);
-			std::clog << "fire to (" << aimPos_->x << ", " << aimPos_->y << ") ===> ";
-			aimPos_ = nullptr;
-		}
+		SDL_Point *c = game().enemy().coordAt(p);
+		if (c != nullptr)
+			aimPos_ = *c;
 	}
 }
 
@@ -81,47 +87,51 @@ void PlayScene::onMouseMove(SDL_Point p)
 {
 	Scene::onMouseMove(p);
 
-	if (game().state() == Game::MyStep)
+	if (game().state() == Game::MyShot)
 	{
-		aimPos_ = game().enemy().coordAt(p);
-	}
-	else
-	{
-		aimPos_ = nullptr;
+		if (moveAim_)
+		{
+			SDL_Point *c = game().enemy().coordAt(p);
+			if (c != nullptr)
+				aimPos_ = *c;
+		}
 	}
 }
 
 void PlayScene::onChangeGameState(/*Game::PlayState state*/)
 {
+	hideButton("btn_fire");
+	hideButton("btn_surrender");
+	hideButton("btn_continue");
+
 	switch (game().state())
 	{
 		case Game::PlayState::WaitEnemy:
-			hideButton("btn_fire");
-			hideButton("btn_surrender");
-			hideButton("btn_continue");
-			status_ = "Ожидание подключения соперника...";
+			status_ = "Ожидание подключения противника...";
 			break;
-		case Game::PlayState::MyStep:
+		case Game::PlayState::MyShot:
 			showButton("btn_fire");
 			showButton("btn_surrender");
 			status_ = "Огонь!!!";
 			break;
-		case Game::PlayState::EnemyStep:
-			hideButton("btn_fire");
-			hideButton("btn_surrender");
-			status_ = "Выстрел соперника...";
+		case Game::PlayState::EnemyShot:
+			status_ = "Выстрел противника...";
 			break;
 		case Game::PlayState::Win:
-			hideButton("btn_surrender");
-			hideButton("btn_fire");
 			showButton("btn_continue");
 			status_ = "Победа!!!!!!";
 			break;
 		case Game::PlayState::Lose:
-			hideButton("btn_surrender");
-			hideButton("btn_fire");
 			showButton("btn_continue");
-			status_ = "Соперник разбил все твои корабли";
+			status_ = "Противник разбил все твои корабли";
+			break;
+		case Game::PlayState::EnemySurrender:
+			showButton("btn_continue");
+			status_ = "Противник поднял белый флаг! Победа!!!";
+			break;
+		default: //EnemyDisconnected
+			showButton("btn_continue");
+			status_ = "...Соединение с противником прервано. Победа защитана тебе!";
 			break;
 	}
 }
@@ -129,14 +139,19 @@ void PlayScene::onChangeGameState(/*Game::PlayState state*/)
 void PlayScene::surrender_click(Scene &scene)
 {
 	//TODO: сдаться
+	scene.game().surrender();
+	scene.game().setScene(scene.game().placeShipScene);
 }
 
 void PlayScene::continue_click(Scene &scene)
 {
-	//TODO: перейти к новой битве
+	scene.game().setScene(scene.game().placeShipScene);
 }
 
-void PlayScene::fire_click(Scene &)
+void PlayScene::fire_click(Scene &scene)
 {
+	PlayScene & sc = static_cast<PlayScene&>(scene);
 	//TODO: выстрел
+	sc.game().fire(sc.aimPos_);
+	std::clog << "fire to (" << sc.aimPos_.x << ", " << sc.aimPos_.y << ") ===> ";
 }

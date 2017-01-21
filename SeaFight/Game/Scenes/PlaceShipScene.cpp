@@ -38,6 +38,11 @@ void PlaceShipScene::draw(Graphics &g)
 	g.drawSprite(ss.str(), mousePos_.x - Ship::DECK_SIZE / 2, mousePos_.y - Ship::DECK_SIZE / 2, 90 * selected_->shipDir(), Ship::DECK_SIZE / 2, Ship::DECK_SIZE / 2);
 }
 
+void PlaceShipScene::onShow()
+{
+	game().newBattle();
+}
+
 void PlaceShipScene::ClearMap_Click(Scene &scene)
 {
 	std::clog << "click Clear map\n";

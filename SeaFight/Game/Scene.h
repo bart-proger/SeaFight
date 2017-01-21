@@ -14,6 +14,7 @@ public:
 	virtual void init() {}
 	virtual void draw(Graphics &);
 	virtual void update(float dt) {}
+	virtual void onShow() {}
 //	virtual void onClick(SDL_Point );
 	virtual void onPress(SDL_Point );
 	virtual void onRelease(SDL_Point );

@@ -54,26 +54,39 @@ void Game::fire(SDL_Point coord)
 	client_.Send(ssCmd.str());
 }
 
+void Game::surrender()
+{
+	client_.Send(CMD_SURRENDER);
+}
+
+void Game::newBattle()
+{
+	player_.clearEnemyShots();
+	enemy_.clearShips();
+	enemy_.clearEnemyShots();
+	//TODO: + очистить статистику боя
+}
+
 void Game::pushCommand(string cmd)
 {
-	//TODO: lock
+SDL_LockMutex(commandsLock_);
 	commands_.push(cmd);
-	//unlock
+SDL_UnlockMutex(commandsLock_);
 }
 
 void Game::parseCommands()
 {
 	while (true)
 	{
-		//TODO: lock
+SDL_LockMutex(commandsLock_);
 		bool empty = commands_.empty();
-		//unlock
+SDL_UnlockMutex(commandsLock_);
 		if (empty)
 			break;
-		//lock
-		string cmd = commands_.back();
+SDL_LockMutex(commandsLock_);
+		string cmd = commands_.front();
 		commands_.pop();
-		//unlock
+SDL_UnlockMutex(commandsLock_);
 
 		if (cmd[0] != '>')
 		{
@@ -98,21 +111,16 @@ void Game::parseCommands()
 
 		if (args[0] == CMD_FIRST)
 		{
-			setState(PlayState::MyStep);
+			setState(PlayState::MyShot);
 		}
 		else if (args[0] == CMD_SECOND)
 		{
-			setState(PlayState::EnemyStep);
+			setState(PlayState::EnemyShot);
 		}
 		else if (args[0] == CMD_ENEMY_DISCONNECTED)
 		{
 			//TODO: show message if enemy disconnected
-			setState(PlayState::WaitEnemy);
-			setScene(placeShipScene);
-			player_.clearEnemyShots();
-
-			enemy_.clearEnemyShots();
-			enemy_.clearShips();
+			setState(PlayState::EnemyDisconnected);
 		}
 		else if (args[0] == CMD_HIT)
 		{
@@ -121,10 +129,11 @@ void Game::parseCommands()
 		else if (args[0] == CMD_MISS)
 		{
 			enemy_.addMiss(coord);
-			setState(PlayState::EnemyStep);
+			setState(PlayState::EnemyShot);
 		}
 		else if (args[0] == CMD_KILL)
 		{
+std::cout << "**add killed ship for enemy\n";
 			enemy_.addKill(coord);
 		}
 		else if (args[0] == CMD_GET_HIT)
@@ -134,10 +143,11 @@ void Game::parseCommands()
 		else if (args[0] == CMD_GET_MISS)
 		{
 			player_.addMiss(coord);
-			setState(PlayState::MyStep);
+			setState(PlayState::MyShot);
 		}
 		else if (args[0] == CMD_GET_KILL)
 		{
+std::cout << "**my ship is killed\n";
 			player_.addKill(coord);
 		}
 		else if (args[0] == CMD_WIN)
@@ -149,6 +159,12 @@ void Game::parseCommands()
 			setState(PlayState::Lose);
 			//TODO: вывод оставшихся кораблей
 		}
+		else if (args[0] == CMD_ENEMY_SURRENDER)
+		{
+			setState(PlayState::EnemySurrender);
+		}
+		else
+			std::cout << "[error] Undefined command!\n";
 	}
 }
 
@@ -161,6 +177,8 @@ bool Game::onInit()
 
 	if (!g.loadTexture("data/ui.tga"))
 		return false;
+
+	commandsLock_ = SDL_CreateMutex();
 
 	g.addSprite("btn_PlayOnline", 0, 0, 201, 44);
 	g.addSprite("btn_PlayVsAI", 0, 44, 324, 44);
@@ -193,7 +211,6 @@ bool Game::onInit()
 
 	player_.setDrawOffset(35, 35);
 	enemy_.setDrawOffset(340, 35);
-	enemy_.clearShips(); //tmp
 	
 	return true;
 }
@@ -203,6 +220,7 @@ void Game::onFree()
 	client_.Disconnect();
 	receiveThread_.Free();
 	Network::Free();
+	SDL_DestroyMutex(commandsLock_);
 }
 
 // void Game::onKeyEvent()
