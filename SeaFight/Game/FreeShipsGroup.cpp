@@ -27,7 +27,7 @@ void FreeShipsGroup::draw(Graphics & g)
 		g.drawSprite(ss.str(), x, rect_.y + (rect_.h - Ship::DECK_SIZE) / 2, 90 * shipDir_/*, Ship::DECK_SIZE / 2, Ship::DECK_SIZE / 2*/);
 		x += shipLength_ * Ship::DECK_SIZE + 6;
 	}
-	g.drawRect(rect_, SDL_Color{0, 0, 255, 255});
+//	g.drawRect(rect_, SDL_Color{0, 0, 255, 255});
 }
 
 bool FreeShipsGroup::pressed(SDL_Point p)

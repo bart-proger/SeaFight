@@ -75,9 +75,9 @@ void SDLApplication::run()
 			{
 				switch (e.type)
 				{
-// 					case SDL_KEYUP:
-// 						onKeyEvent(/* TODO: OnKeyEvent params*/);
-// 						break;
+					case SDL_KEYDOWN:
+						onKeyDown(e.key.keysym.sym);
+						break;
 					case SDL_MOUSEBUTTONDOWN:
 						onPress({ e.button.x, e.button.y });
 						break;
@@ -91,10 +91,10 @@ void SDLApplication::run()
 						onRelease({ (int)(e.tfinger.x * width_), (int)(e.tfinger.y * height_) });
 						break;
 					case SDL_MOUSEMOTION:
-						onMouseMove({ e.motion.x, e.motion.y });
+						onMove({ e.motion.x, e.motion.y });
 						break;
 					case SDL_FINGERMOTION:
-						onMouseMove({ (int)(e.tfinger.x * width_), (int)(e.tfinger.y * height_) });
+						onMove({ (int)(e.tfinger.x * width_), (int)(e.tfinger.y * height_) });
 						break;
 				}
 			}

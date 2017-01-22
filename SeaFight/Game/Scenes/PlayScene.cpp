@@ -16,17 +16,6 @@ void PlayScene::init()
 	addButton("btn_surrender", { 100, 350, 44, 44 }, surrender_click);
 	addButton("btn_fire", { 400, 350, 44, 44 }, fire_click);
 	addButton("btn_continue", { 250, 350, 44, 44 }, continue_click);
-
-	status_ = "Ожидание подключения соперника...";
-	hideButton("btn_fire");
-	hideButton("btn_surrender");
-	hideButton("btn_continue");
-}
-
-void PlayScene::update(float dt)
-{
-	//TODO: angle += 0.05 * dt
-	//if (game().state())
 }
 
 void PlayScene::draw(Graphics &g)
@@ -58,7 +47,7 @@ void PlayScene::draw(Graphics &g)
 void PlayScene::onShow()
 {
 	moveAim_ = false;
-	aimPos_ = { -100, -100 };
+	aimPos_ = { 5, 5 };
 	game().setState(Game::PlayState::WaitEnemy);
 }
 
@@ -83,9 +72,9 @@ void PlayScene::onRelease(SDL_Point p)
 	}
 }
 
-void PlayScene::onMouseMove(SDL_Point p)
+void PlayScene::onMove(SDL_Point p)
 {
-	Scene::onMouseMove(p);
+	Scene::onMove(p);
 
 	if (game().state() == Game::MyShot)
 	{

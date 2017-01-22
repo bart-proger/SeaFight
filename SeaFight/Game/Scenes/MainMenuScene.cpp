@@ -10,46 +10,40 @@ MainMenuScene::MainMenuScene(Game &game):
 
 void MainMenuScene::init()
 {
-	SDL_Rect r1 = { 136, 97, 201, 44 };
-	addButton("btn_PlayOnline", r1, PlayOnline_Click);
-
-// 	SDL_Rect r2 = { 75, 150, 324, 44 };
-// 	addButton("btn_PlayVsAI", r2, PlayVsAI_Click);
-
-	SDL_Rect r3 = { 165, 237, 150, 44 };
-	addButton("btn_Quit", r3, Quit_Click);
+	addButton("btn_PlayOnline", SDL_Rect{ 136, 97, 201, 44 }, playOnline_click);
+// 	addButton("btn_PlayVsAI", SDL_Rect{ 75, 150, 324, 44 }, PlayVsAI_Click);
+	addButton("btn_Quit", SDL_Rect{ 165, 237, 150, 44 }, quit_click);
 }
 
 void MainMenuScene::draw(Graphics &g)
 {
-	Scene::draw(g);
-
 	//...
+
+	Scene::draw(g);
 }
 
-void MainMenuScene::PlayOnline_Click(Scene &scene)
+void MainMenuScene::onShow()
 {
-	std::clog << "click [Play online]\n";
-	
+	game().setScene(game().placeShipScene);
+}
+
+void MainMenuScene::playOnline_click(Scene &scene)
+{	
 	if (scene.game().connectToServer())
-	{
 		scene.game().setScene(scene.game().placeShipScene);
-	}
 	else
 	{
 		//TODO: показать сообщение "Сервер не доступен"
 	}
 }
 
-void MainMenuScene::PlayVsAI_Click(Scene &scene)
+void MainMenuScene::playVsAI_click(Scene &scene)
 {
-	std::clog << "click [Play vs AI]\n";
-	// TODO: click Play vs AI
+	//TODO: играть против ИИ
 	scene.game().setScene(scene.game().placeShipScene);
 }
 
-void MainMenuScene::Quit_Click(Scene &scene)
+void MainMenuScene::quit_click(Scene &scene)
 {
-	std::clog << "click [Quit]\n";
 	scene.game().quit();
 }

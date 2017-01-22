@@ -14,9 +14,9 @@ PlaceShipScene::PlaceShipScene(Game &game):
 void PlaceShipScene::init()
 {
 	//SDL_Rect r1 = { 287+180, 100, 143, 44 };
-	addButton("btn_ClearMap", /*r1*/{ 287 + 180, 100, 143, 44 }, ClearMap_Click);
+	addButton("btn_ClearMap", /*r1*/{ 287 + 180, 100, 143, 44 }, clearMap_click);
 	//SDL_Rect r2 = { 302+180, 214, 107, 44 };
-	addButton("btn_GoFight", /*r2*/{ 302 + 180, 214, 107, 44 }, GoFight_Click);
+	addButton("btn_GoFight", /*r2*/{ 302 + 180, 214, 107, 44 }, goFight_click);
 }
 
 void PlaceShipScene::draw(Graphics &g)
@@ -43,7 +43,7 @@ void PlaceShipScene::onShow()
 	game().newBattle();
 }
 
-void PlaceShipScene::ClearMap_Click(Scene &scene)
+void PlaceShipScene::clearMap_click(Scene &scene)
 {
 	std::clog << "click Clear map\n";
 	
@@ -56,7 +56,7 @@ void PlaceShipScene::ClearMap_Click(Scene &scene)
 	}
 }
 
-void PlaceShipScene::GoFight_Click(Scene &scene)
+void PlaceShipScene::goFight_click(Scene &scene)
 {
 	std::clog << "click Go fight\n";
 
@@ -116,7 +116,7 @@ void PlaceShipScene::onRelease(SDL_Point p)
 	selected_ = nullptr;
 }
 
-void PlaceShipScene::onMouseMove(SDL_Point p)
+void PlaceShipScene::onMove(SDL_Point p)
 {
 	if (selected_ == nullptr)
 		return;

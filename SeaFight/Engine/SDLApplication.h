@@ -32,8 +32,9 @@ protected:
 	virtual void onDraw() {}
 //	virtual void onKeyEvent() {}
 	virtual void onPress(SDL_Point) {}
-	virtual void onRelease(SDL_Point ) {}
-	virtual void onMouseMove(SDL_Point dp) {}
+	virtual void onRelease(SDL_Point) {}
+	virtual void onMove(SDL_Point) {}
+	virtual void onKeyDown(SDL_Keycode) {}
 
 private:
 	int width_;

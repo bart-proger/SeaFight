@@ -10,10 +10,11 @@ public:
 
 	void init() override;
 	void draw(Graphics &) override;
+	void onShow() override;
 
 private:
-	static void PlayOnline_Click(Scene &);
- 	static void PlayVsAI_Click(Scene &);
- 	static void Quit_Click(Scene &);
+	static void playOnline_click(Scene &);
+ 	static void playVsAI_click(Scene &);
+ 	static void quit_click(Scene &);
 };
 

@@ -19,6 +19,7 @@ Game::Game():
 	receiveThread_(*this),
 	state_(WaitEnemy)
 {
+	commandsLock_ = SDL_CreateMutex();
 }
 
 void Game::setState(PlayState state)
@@ -76,17 +77,17 @@ SDL_UnlockMutex(commandsLock_);
 
 void Game::parseCommands()
 {
-	while (true)
-	{
-SDL_LockMutex(commandsLock_);
+//	while (true)
+//	{
+		SDL_LockMutex(commandsLock_);
 		bool empty = commands_.empty();
-SDL_UnlockMutex(commandsLock_);
+		SDL_UnlockMutex(commandsLock_);
 		if (empty)
-			break;
-SDL_LockMutex(commandsLock_);
+			return;
+		SDL_LockMutex(commandsLock_);
 		string cmd = commands_.front();
 		commands_.pop();
-SDL_UnlockMutex(commandsLock_);
+		SDL_UnlockMutex(commandsLock_);
 
 		if (cmd[0] != '>')
 		{
@@ -133,7 +134,6 @@ SDL_UnlockMutex(commandsLock_);
 		}
 		else if (args[0] == CMD_KILL)
 		{
-std::cout << "**add killed ship for enemy\n";
 			enemy_.addKill(coord);
 		}
 		else if (args[0] == CMD_GET_HIT)
@@ -147,7 +147,6 @@ std::cout << "**add killed ship for enemy\n";
 		}
 		else if (args[0] == CMD_GET_KILL)
 		{
-std::cout << "**my ship is killed\n";
 			player_.addKill(coord);
 		}
 		else if (args[0] == CMD_WIN)
@@ -165,7 +164,7 @@ std::cout << "**my ship is killed\n";
 		}
 		else
 			std::cout << "[error] Undefined command!\n";
-	}
+//	}
 }
 
 bool Game::onInit()
@@ -178,14 +177,12 @@ bool Game::onInit()
 	if (!g.loadTexture("data/ui.tga"))
 		return false;
 
-	commandsLock_ = SDL_CreateMutex();
-
 	g.addSprite("btn_PlayOnline", 0, 0, 201, 44);
 	g.addSprite("btn_PlayVsAI", 0, 44, 324, 44);
 	g.addSprite("btn_Quit", 0, 88, 150, 44);
 	g.addSprite("btn_ClearMap", 0, 132, 143, 44);
 	g.addSprite("btn_GoFight", 0, 176, 107, 44);
-	g.addSprite("btn_Surrender", 0, 220, 155, 44);
+//	g.addSprite("btn_Surrender", 0, 220, 155, 44);
 	g.addSprite("sea", 0, 272, 240, 240);
 	g.addSprite("ship", 166, 242, 24, 24);
 	g.addSprite("hit", 190, 242, 24, 24);
@@ -217,6 +214,7 @@ bool Game::onInit()
 
 void Game::onFree()
 {
+
 	client_.Disconnect();
 	receiveThread_.Free();
 	Network::Free();
@@ -229,24 +227,34 @@ void Game::onFree()
 
 void Game::onPress(SDL_Point p)
 {
-	scene_->onPress(p);
+	if (scene_ != nullptr)
+		scene_->onPress(p);
 }
 
 void Game::onRelease(SDL_Point p)
 {
-	scene_->onRelease(p);
+	if (scene_ != nullptr)
+		scene_->onRelease(p);
 }
 
-void Game::onMouseMove(SDL_Point p)
+void Game::onMove(SDL_Point p)
 {
-	scene_->onMouseMove(p);
+	if (scene_ != nullptr)
+		scene_->onMove(p);
+}
+
+void Game::onKeyDown(SDL_Keycode key)
+{
+	if (key == SDLK_AC_BACK || SDLK_ESCAPE)
+		quit();
 }
 
 void Game::onUpdate()
 {
 	parseCommands();
 	//TODO: вычислить прошедшее время dt
-	scene_->update(0.0f);
+	if (scene_ != nullptr)
+		scene_->update(0.0f);
 }
 
 void Game::onDraw()

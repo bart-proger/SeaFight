@@ -52,7 +52,8 @@ private:
 //	void onKeyEvent() override;
 	void onPress(SDL_Point ) override;
 	void onRelease(SDL_Point ) override;
-	void onMouseMove(SDL_Point) override;
+	void onMove(SDL_Point) override;
+	void onKeyDown(SDL_Keycode) override;
 
 	Scene *scene_;
 	PlayState state_;
@@ -87,3 +88,5 @@ private:
 #define CMD_SURRENDER	">surrender"
 
 #define CMD_OK			">ok"	// опрос от сервера - игрок онлайн?
+
+

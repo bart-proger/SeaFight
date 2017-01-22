@@ -18,7 +18,7 @@ public:
 //	virtual void onClick(SDL_Point );
 	virtual void onPress(SDL_Point );
 	virtual void onRelease(SDL_Point );
-	virtual void onMouseMove(SDL_Point) {}
+	virtual void onMove(SDL_Point) {}
 	virtual void onChangeGameState(/*Game::PlayState*/) {}
 	Game & game();
 
