@@ -10,7 +10,7 @@ class Player: public WinThread
 {
 public:
 	enum { MAP_WIDTH = 10, MAP_HEIGHT = 10 };
-	enum PlayState { Disconnected, Connected, ReadyPlay, MyStep, EnemyStep };
+	enum PlayState { Disconnected, Connected, ReadyPlay, MyShot, EnemyShot };
 	struct Cell
 	{
 		bool hasShip;

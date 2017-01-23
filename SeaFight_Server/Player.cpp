@@ -147,8 +147,8 @@ void Player::surrender()
 
 void Player::PlayEnemy()
 {
-	state_ = PlayState::EnemyStep;
-	enemy_->state_ = PlayState::MyStep;
+	state_ = PlayState::EnemyShot;
+	enemy_->state_ = PlayState::MyShot;
 }
 
 void Player::WaitNextEnemy()
@@ -160,10 +160,10 @@ void Player::WaitNextEnemy()
 		StartBattle();
 		return;
 	}
+	//если нет игроков готовых играть, то
 
 	std::cout << name_ << ": wait next enemy...\n";
 
-	enemy_ = NULL;
 	server_->setReadyPlayer(this);
 
 	bool found = false;
@@ -184,21 +184,21 @@ void Player::WaitNextEnemy()
 
 void Player::StartBattle()
 {
-	if ((rand() % 2) < 1)
+	if ((rand() % 100) < 50)	// кто будет ходить первым? 50/50
 	{
 		client_.Send(CMD_FIRST);
 		enemy_->client_.Send(CMD_SECOND);
 
-		state_ = PlayState::MyStep;
-		enemy_->state_ = PlayState::EnemyStep;
+		state_ = PlayState::MyShot;
+		enemy_->state_ = PlayState::EnemyShot;
 	}
 	else
 	{
 		client_.Send(CMD_SECOND);
 		enemy_->client_.Send(CMD_FIRST);
 
-		state_ = PlayState::EnemyStep;
-		enemy_->state_ = PlayState::MyStep;
+		state_ = PlayState::EnemyShot;
+		enemy_->state_ = PlayState::MyShot;
 	}
 	std::cout << name_ << " _vs_ " << enemy_->name_ << " - Start battle!\n";
 }
@@ -231,10 +231,10 @@ void Player::ParseCommand(string cmd)
 
 		WaitNextEnemy();
 	}
-	else if (state_ == PlayState::MyStep)
+	else if (state_ == PlayState::MyShot)
 	{
 		if (args[0] == CMD_FIRE)
-			fire(atoi(args[1].c_str()), atoi(args[2].c_str()));
+			fire(atoi(args[1].c_str()), atoi(args[2].c_str()));	//TODO: проверить x, y
 		else if (args[0] == CMD_SURRENDER)
 			surrender();
 	}
@@ -253,12 +253,13 @@ void Player::Process()				//------- ReceiveThread
 
 	std::cout << name_ << " successfully connected\n";
 
-	while (/*client_.Connected() && */client_.Receive(data))
+	while (/*client_.Connected() && */client_.Receive(data))	//ожидает пока не появятся данные от клиента
 	{
 		std::cout << name_ << ": " << data.c_str() << std::endl;
 		if (data != CMD_OK)
 			ParseCommand(data);
 	}
+	//если ошибка в соединении, то
 
 	state_ = PlayState::Disconnected;
 

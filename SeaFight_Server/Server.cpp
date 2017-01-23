@@ -40,7 +40,7 @@ void Server::Run()
 Player* Server::readyPlayer() const
 {
 	//TODO: lock
-	return readyPlayer_;
+	return readyPlayer_;	//TODO: poll of ready players
 	//unlock
 }
 
