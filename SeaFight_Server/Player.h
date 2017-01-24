@@ -17,10 +17,11 @@ public:
 		bool attacked;
 	};
 
-	Player(Server* );
+	Player(Server *);
 	~Player();
 
 	WinTcpClient & client();
+	const string & name() const { return name_; }
 // 	void setClient(WinTcpClient );
 // 	void setEnemy(Player *);
 // 	void setState(PlayState );
@@ -40,6 +41,7 @@ private:
 	void PlayEnemy();
 	void WaitNextEnemy();
 	void StartBattle();
+	void finishBattle();
 
 	void Process();
 

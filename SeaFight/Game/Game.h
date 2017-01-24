@@ -66,7 +66,7 @@ private:
 	TcpClient client_;
 	ReceiveThread receiveThread_;
 	std::queue<string> commands_;
-	SDL_mutex * commandsLock_;
+	SDL_mutex *commandsLock_;
 };
 
 //enum Game::PlayState { WaitEnemy, /*ReadyPlay,*/ MyStep, EnemyStep, Win, Lose };

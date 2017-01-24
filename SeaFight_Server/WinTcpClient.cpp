@@ -46,6 +46,9 @@ void WinTcpClient::Disconnect()
 
 bool WinTcpClient::Send(string msg)
 {
+	if (!Connected())
+		return false;
+
 	int sz = msg.length()+1;
 	char sd[sizeof(sz)];
 	memcpy(sd, &sz, sizeof(sz));
@@ -69,6 +72,9 @@ bool WinTcpClient::Send(string msg)
 
 bool WinTcpClient::Receive(string &msg)
 {
+	if (!Connected())
+		return false;
+
 	int sz = 0;
 	char sd[sizeof(sz)];
 

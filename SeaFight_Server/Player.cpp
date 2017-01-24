@@ -110,11 +110,8 @@ void Player::fire(int x, int y)
 			if (enemy_->shipDecksLeft_ == 0) // win!
 			{
 				client_.Send(CMD_WIN);
-				enemy_->enemy_ = NULL;
 				enemy_->client().Send(CMD_LOSE /*+ args*/);  //TODO: передать оставшиеся корабли
-				enemy_->state_ = PlayState::Connected;
-				enemy_ = NULL;
-				state_ = PlayState::Connected;
+				finishBattle();
 				std::cout << name_ << " -WINNER" << std::endl;
 			}
 		}
@@ -137,11 +134,8 @@ void Player::fire(int x, int y)
 
 void Player::surrender()
 {
-	enemy_->enemy_ = NULL;
 	enemy_->client().Send(CMD_ENEMY_SURR);
-	enemy_->state_ = PlayState::Connected;
-	enemy_ = NULL;
-	state_ = PlayState::Connected;
+	finishBattle();
 	std::cout << name_ << " -SURRENDER" << std::endl;
 }
 
@@ -201,6 +195,14 @@ void Player::StartBattle()
 		enemy_->state_ = PlayState::MyShot;
 	}
 	std::cout << name_ << " _vs_ " << enemy_->name_ << " - Start battle!\n";
+}
+
+void Player::finishBattle()
+{
+	enemy_->enemy_ = NULL;
+	enemy_->state_ = PlayState::Connected;
+	enemy_ = NULL;
+	state_ = PlayState::Connected;
 }
 
 void Player::ParseCommand(string cmd)

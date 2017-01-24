@@ -14,7 +14,7 @@ int ReceiveThread::Process()
 	
 	while (game_.client().receive(cmd))
 	{
-		std::cout << "server: " << cmd.c_str() << std::endl;
+		std::cout << "server: " << cmd << std::endl;
 		if (cmd != CMD_OK)
 			game_.pushCommand(cmd);
 	}

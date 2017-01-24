@@ -19,12 +19,10 @@ bool Server::Init(string ip, unsigned short port)
 }
 
 void Server::Run()
-{
-	Player* connectedPlayer = new Player(this);
-
+{	
 	consoleInputThread_.StartThread();
 
-	while (listener_.Accept(connectedPlayer->client()))
+	for (Player* connectedPlayer = new Player(this); listener_.Accept(connectedPlayer->client()); connectedPlayer = new Player(this))
 	{
 		removeDisconnectedPlayers();
 
@@ -32,8 +30,6 @@ void Server::Run()
 		std::cout << "New connection...\n";
 
 		connectedPlayer->StartThread();
-
-		connectedPlayer = new Player(this);
 	}
 }
 
@@ -53,26 +49,28 @@ void Server::setReadyPlayer(Player* value)
 
 void Server::removeDisconnectedPlayers()
 {
-	players_.erase(std::remove_if(players_.begin(), players_.end(), isDisconnected), players_.end());
-}
-
-bool Server::isDisconnected(Player* p)
-{
-	return p->isDisconnected();
+	players_.erase(std::remove_if(players_.begin(), players_.end(), [](Player *p)->bool { return p->isDisconnected(); }), players_.end());
 }
 
 void Server::Quit()
 {
-	//TODO: stop all players threads
+	for (auto &p: players_)
+	{
+		p->client().Disconnect();
+	}
+	removeDisconnectedPlayers();
 	listener_.Stop();
 }
 
-// 
-// void Server::Process()			//---- ManageThread
-// {
-// 	while (true)
-// 	{
-// 
-// 	}
-// }
-
+void Server::printPlayersOnline()
+{
+	//TODO: lock
+	std::cout << "---Players online: ---" << std::endl;
+	for (auto p: players_)
+	{
+		if (!p->isDisconnected())
+			std::cout << p->name() << std::endl;
+	}
+	std::cout << "----------------------" << std::endl;
+	//unlock
+}

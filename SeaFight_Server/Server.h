@@ -16,8 +16,9 @@ public:
 	Player* readyPlayer() const;
 	void setReadyPlayer(Player* );
 	void removeDisconnectedPlayers();
+	void printPlayersOnline();
 private:
-	static bool isDisconnected(Player* );
+	//static bool isDisconnected(Player* );
 	
 	WinTcpListener listener_;
 	std::vector<Player*> players_;

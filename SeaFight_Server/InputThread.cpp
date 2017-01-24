@@ -18,6 +18,10 @@ void InputThread::Process()
 		std::cin >> cmd;
 		if (cmd == "quit" || cmd == "q")
 			break;
+		else if (cmd == "players" || cmd == "p")
+		{
+			server_.printPlayersOnline();
+		}
 	}
 
 	server_.Quit();
