@@ -127,7 +127,6 @@ void PlayScene::onChangeGameState(/*Game::PlayState state*/)
 
 void PlayScene::surrender_click(Scene &scene)
 {
-	//TODO: сдаться
 	scene.game().surrender();
 	scene.game().setScene(scene.game().placeShipScene);
 }
@@ -140,7 +139,6 @@ void PlayScene::continue_click(Scene &scene)
 void PlayScene::fire_click(Scene &scene)
 {
 	PlayScene & sc = static_cast<PlayScene&>(scene);
-	//TODO: выстрел
 	sc.game().fire(sc.aimPos_);
 	std::clog << "fire to (" << sc.aimPos_.x << ", " << sc.aimPos_.y << ") ===> ";
 }

@@ -8,11 +8,11 @@ class TcpClient
 public:
 	TcpClient();
 	~TcpClient();
-	bool Connect(string ip, unsigned short port);
-	void Disconnect();
-	bool Send(string );
-	bool Receive(string &);
-	bool Connected() const;
+	bool connect(string ip, unsigned short port);
+	void disconnect();
+	bool send(string );
+	bool receive(string &);
+	bool connected() const;
 
 private:
 	TCPsocket socket_;

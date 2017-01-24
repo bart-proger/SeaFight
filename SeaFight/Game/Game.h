@@ -32,12 +32,13 @@ public:
 	TcpClient & client() { return client_; }
 
 	bool connectToServer();
+	void sendCommand(const string& cmd);
 	void readyPlay();
 	void fire(SDL_Point coord);
 	void surrender();
 	void newBattle();
 
-	void pushCommand(string cmd);
+	void pushCommand(const string& cmd);
 	void parseCommands();
 	
 	MainMenuScene mainMenuScene;

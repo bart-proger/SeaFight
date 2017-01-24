@@ -14,7 +14,7 @@ Thread::~Thread()
 
 bool Thread::Start()
 {
-	if (!(sdlThread_ = SDL_CreateThread(_Process, name_.c_str(), reinterpret_cast<void*>(this))))
+	if (!(sdlThread_ = SDL_CreateThread(_Process, name_.c_str(), static_cast<void*>(this))))
 	{
 		std::cerr << "[error] SDL_CreateThread: " << SDL_GetError() << std::endl;
 		return false;
@@ -22,10 +22,10 @@ bool Thread::Start()
 	return true;
 }
 
-void Thread::Delay(int ms)
-{
-	SDL_Delay(ms);
-}
+// void Thread::Delay(int ms)
+// {
+// 	SDL_Delay(ms);
+// }
 
 void Thread::Free()
 {
@@ -36,6 +36,6 @@ void Thread::Free()
 
 int Thread::_Process(void* self)
 {
-	Thread* t = reinterpret_cast<Thread*>(self);
+	Thread* t = static_cast<Thread*>(self);
 	return t->Process();
 }

@@ -31,9 +31,9 @@ void Game::setState(PlayState state)
 
 bool Game::connectToServer()
 {
-	if (!client_.Connect(SERVER_IP, SERVER_PORT))
+	if (!client_.connect(SERVER_IP, SERVER_PORT))
 	{
-		std::cout << "Couldn't connect to server: " << SERVER_IP << ":" << SERVER_PORT << std::endl;
+		std::cout << "Невозможно подключиться к серверу: " << SERVER_IP << ":" << SERVER_PORT << std::endl;
 		return false;
 	}
 	if (!receiveThread_.Start())
@@ -42,9 +42,17 @@ bool Game::connectToServer()
 	return true;
 }
 
+void Game::sendCommand(const string& cmd)
+{
+	if (!client_.send(cmd))
+	{
+		//TODO: показать сообщение "Обрыв соединения с сервером"
+	}
+}
+
 void Game::readyPlay()
 {
-	client_.Send(CMD_READY_PLAY ":" + player_.mapData());
+	sendCommand(CMD_READY_PLAY ":" + player_.mapData());
 }
 
 void Game::fire(SDL_Point coord)
@@ -52,12 +60,12 @@ void Game::fire(SDL_Point coord)
 	lastFire_ = coord;
 	std::stringstream ssCmd;
 	ssCmd << CMD_FIRE << ":" << coord.x << ":" << coord.y;
-	client_.Send(ssCmd.str());
+	sendCommand(ssCmd.str());
 }
 
 void Game::surrender()
 {
-	client_.Send(CMD_SURRENDER);
+	sendCommand(CMD_SURRENDER);
 }
 
 void Game::newBattle()
@@ -68,11 +76,11 @@ void Game::newBattle()
 	//TODO: + очистить статистику боя
 }
 
-void Game::pushCommand(string cmd)
+void Game::pushCommand(const string& cmd)
 {
-SDL_LockMutex(commandsLock_);
+	SDL_LockMutex(commandsLock_);
 	commands_.push(cmd);
-SDL_UnlockMutex(commandsLock_);
+	SDL_UnlockMutex(commandsLock_);
 }
 
 void Game::parseCommands()
@@ -215,7 +223,7 @@ bool Game::onInit()
 void Game::onFree()
 {
 
-	client_.Disconnect();
+	client_.disconnect();
 	receiveThread_.Free();
 	Network::Free();
 	SDL_DestroyMutex(commandsLock_);

@@ -11,7 +11,7 @@ public:
 	virtual ~Thread();
 
 	bool Start();
-	void Delay(int ms);
+//	void Delay(int ms);
 	void Free();
 
 protected:
