@@ -1,9 +1,7 @@
 ﻿#include "Game.h"
 #include "Scene.h"
-#include <string>
-using std::string;
+#include "../string_utils.h"
 #include <iostream>
-#include <sstream>
 
 
 #define SERVER_IP "127.0.0.1"
@@ -14,12 +12,12 @@ Game::Game():
 	mainMenuScene(*this),
 	placeShipScene(*this),
 	playScene(*this),
-	scene_(&mainMenuScene),
 	//scene_(&placeShipScene),
 	receiveThread_(*this),
 	state_(WaitEnemy)
 {
 	commandsLock_ = SDL_CreateMutex();
+	setScene(mainMenuScene);
 }
 
 void Game::setState(PlayState state)
@@ -47,20 +45,23 @@ void Game::sendCommand(const string& cmd)
 	if (!client_.send(cmd))
 	{
 		//TODO: показать сообщение "Обрыв соединения с сервером"
+		setScene(mainMenuScene);
 	}
 }
 
 void Game::readyPlay()
 {
-	sendCommand(CMD_READY_PLAY ":" + player_.mapData());
+	sendCommand(CMD_READY_PLAY ":" + player_.mapToString());
 }
 
 void Game::fire(SDL_Point coord)
 {
-	lastFire_ = coord;
-	std::stringstream ssCmd;
-	ssCmd << CMD_FIRE << ":" << coord.x << ":" << coord.y;
-	sendCommand(ssCmd.str());
+// 	lastFire_ = coord;
+// 	std::stringstream ssCmd;
+// 	ssCmd << CMD_FIRE << ":" << coord.x << ":" << coord.y;
+// 	sendCommand(ssCmd.str());
+
+	sendCommand(CMD_FIRE ":" + to_string(coord.x) + ":" + to_string(coord.y));
 }
 
 void Game::surrender()
@@ -70,6 +71,7 @@ void Game::surrender()
 
 void Game::newBattle()
 {
+	setState(PlayState::Connected);
 	player_.clearEnemyShots();
 	enemy_.clearShips();
 	enemy_.clearEnemyShots();
@@ -103,14 +105,7 @@ void Game::parseCommands()
 			return;
 		}
 
-		std::vector<string> args;
-		std::stringstream ss(cmd);
-		string item;
-
-		while (std::getline(ss, item, ':'))
-		{
-			args.push_back(item);
-		}
+		std::vector<string> args = string_split(cmd, ':');
 
 		SDL_Point coord{-1, -1};
 		if (args.size() >= 3)
@@ -222,16 +217,11 @@ bool Game::onInit()
 
 void Game::onFree()
 {
-
 	client_.disconnect();
 	receiveThread_.Free();
 	Network::Free();
 	SDL_DestroyMutex(commandsLock_);
 }
-
-// void Game::onKeyEvent()
-// {
-// }
 
 void Game::onPress(SDL_Point p)
 {

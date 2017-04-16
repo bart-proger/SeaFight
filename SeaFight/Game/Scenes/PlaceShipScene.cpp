@@ -2,7 +2,8 @@
 #include "../Game.h"
 #include <iostream>
 #include "../Ship.h"
-#include <sstream>
+#include "../../string_utils.h"
+
 
 PlaceShipScene::PlaceShipScene(Game &game):
 	Scene(game),
@@ -33,9 +34,9 @@ void PlaceShipScene::draw(Graphics &g)
 	if (selected_ == nullptr)
 		return;
 
-	std::stringstream ss;
-	ss << "ship" << selected_->shipLength();
-	g.drawSprite(ss.str(), mousePos_.x - Ship::DECK_SIZE / 2, mousePos_.y - Ship::DECK_SIZE / 2, 90 * selected_->shipDir(), Ship::DECK_SIZE / 2, Ship::DECK_SIZE / 2);
+//	std::stringstream ss;
+//	ss << "ship" << selected_->shipLength();
+	g.drawSprite("ship" + to_string(selected_->shipLength()), mousePos_.x - Ship::DECK_SIZE / 2, mousePos_.y - Ship::DECK_SIZE / 2, 90 * selected_->shipDir(), Ship::DECK_SIZE / 2, Ship::DECK_SIZE / 2);
 }
 
 void PlaceShipScene::onShow()

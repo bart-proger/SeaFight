@@ -24,7 +24,7 @@ void MainMenuScene::draw(Graphics &g)
 
 void MainMenuScene::onShow()
 {
-	game().setScene(game().placeShipScene);
+	//game().setScene(game().placeShipScene);
 }
 
 void MainMenuScene::playOnline_click(Scene &scene)

@@ -1,7 +1,7 @@
 #include "Ship.h"
 #include <string>
 #include "../Engine/Graphics.h"
-#include <sstream>
+#include "../string_utils.h"
 
 //								rigth    down      left       up
 const int Ship::DIR[4][2] = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
@@ -109,11 +109,9 @@ void Ship::draw(Graphics &g, SDL_Point offset)
 		p.y += DIR[dir_][1];
 	}*/
 
-	std::stringstream ss;
-	ss << "ship" << length_;
 	int x = offset.x + pos_.x * DECK_SIZE,
 		y = offset.y + pos_.y * DECK_SIZE;
-	g.drawSprite(ss.str(), x, y, dir_*90/* + angle*/, DECK_SIZE / 2, DECK_SIZE / 2);
+	g.drawSprite("ship" + to_string(length_), x, y, dir_*90/* + angle*/, DECK_SIZE / 2, DECK_SIZE / 2);
 /*
 	if ((angle += 2) >= 360)
 		angle -= 360;*/

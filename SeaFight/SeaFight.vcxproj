@@ -150,6 +150,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Animation.cpp" />
+    <ClCompile Include="string_utils.cpp" />
     <ClCompile Include="Game\Enemy.cpp" />
     <ClCompile Include="Engine\Font.cpp" />
     <ClCompile Include="Engine\Graphics.cpp" />
@@ -171,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Animation.h" />
+    <ClInclude Include="string_utils.h" />
     <ClInclude Include="Game\Enemy.h" />
     <ClInclude Include="Engine\Font.h" />
     <ClInclude Include="Engine\Graphics.h" />

@@ -22,7 +22,7 @@ public:
 	void addHit(SDL_Point coord);
 	void addMiss(SDL_Point coord);
 	virtual void addKill(SDL_Point coord);
-	string mapData() const;
+	string mapToString() const;
 
 	SDL_Point drawOffset() const { return drawOffset_; }
 	void setDrawOffset(int x, int y);

@@ -16,7 +16,7 @@ class Scene;
 class Game: public SDLApplication
 {
 public:
-	enum PlayState { WaitEnemy, /*ReadyPlay,*/ MyShot, EnemyShot, Win, Lose, EnemySurrender, EnemyDisconnected };
+	enum PlayState { Connected, WaitEnemy, MyShot, EnemyShot, Win, Lose, EnemySurrender, EnemyDisconnected };
 //	enum PlayState;
 
 	Game();

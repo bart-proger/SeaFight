@@ -84,7 +84,7 @@ void Player::addKill(SDL_Point coord)
 	}
 }
 
-string Player::mapData() const
+string Player::mapToString() const
 {
 	char data[101];
 	memset(data, '0', sizeof(data));

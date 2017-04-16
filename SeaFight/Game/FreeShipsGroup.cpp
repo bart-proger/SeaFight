@@ -1,6 +1,6 @@
 #include "FreeShipsGroup.h"
 #include "../Engine/Graphics.h"
-#include <sstream>
+#include "../string_utils.h"
 
 
 FreeShipsGroup::FreeShipsGroup(int shipLength, int x, int y) :
@@ -15,8 +15,6 @@ void FreeShipsGroup::draw(Graphics & g)
 	if (shipsCount_ == 0)
 		return;
 
-	std::stringstream ss;
-	ss << "ship" << shipLength_;
 	int x = rect_.x + 6;
 //	g.drawSprite(ss.str(), x, rect_.y + (rect_.h - Ship::DECK_SIZE) / 2, 90 * shipDir_/*, Ship::DECK_SIZE / 2, Ship::DECK_SIZE / 2*/);
 //	x += shipLength_ * Ship::DECK_SIZE + 6;
@@ -24,7 +22,7 @@ void FreeShipsGroup::draw(Graphics & g)
 	
 	for (int c = /*1*/0; c < shipsCount_; ++c)
 	{
-		g.drawSprite(ss.str(), x, rect_.y + (rect_.h - Ship::DECK_SIZE) / 2, 90 * shipDir_/*, Ship::DECK_SIZE / 2, Ship::DECK_SIZE / 2*/);
+		g.drawSprite("ship" + to_string(shipLength_), x, rect_.y + (rect_.h - Ship::DECK_SIZE) / 2, 90 * shipDir_/*, Ship::DECK_SIZE / 2, Ship::DECK_SIZE / 2*/);
 		x += shipLength_ * Ship::DECK_SIZE + 6;
 	}
 //	g.drawRect(rect_, SDL_Color{0, 0, 255, 255});

@@ -72,6 +72,9 @@
     <ClCompile Include="Engine\Animation.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
+    <ClCompile Include="string_utils.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Font.h">
@@ -126,6 +129,9 @@
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Animation.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="string_utils.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>
