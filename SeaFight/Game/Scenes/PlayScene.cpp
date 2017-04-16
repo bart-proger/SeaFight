@@ -64,7 +64,7 @@ void PlayScene::onRelease(SDL_Point p)
 
 	moveAim_ = false;
 
-	if (game().state() == Game::MyShot)
+	if (game().state() == Game::PlayState::MyShot)
 	{
 		SDL_Point *c = game().enemy().coordAt(p);
 		if (c != nullptr)
@@ -76,7 +76,7 @@ void PlayScene::onMove(SDL_Point p)
 {
 	Scene::onMove(p);
 
-	if (game().state() == Game::MyShot)
+	if (game().state() == Game::PlayState::MyShot)
 	{
 		if (moveAim_)
 		{

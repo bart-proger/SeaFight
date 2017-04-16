@@ -14,7 +14,7 @@ Game::Game():
 	playScene(*this),
 	//scene_(&placeShipScene),
 	receiveThread_(*this),
-	state_(WaitEnemy)
+	state_(PlayState::WaitEnemy)
 {
 	commandsLock_ = SDL_CreateMutex();
 	setScene(mainMenuScene);
@@ -31,7 +31,7 @@ bool Game::connectToServer()
 {
 	if (!client_.connect(SERVER_IP, SERVER_PORT))
 	{
-		std::cout << "Невозможно подключиться к серверу: " << SERVER_IP << ":" << SERVER_PORT << std::endl;
+		showMessage(MessageType::Error, "Невозможно подключиться к серверу: " SERVER_IP ":" + to_string(SERVER_PORT));
 		return false;
 	}
 	if (!receiveThread_.Start())
@@ -44,8 +44,7 @@ void Game::sendCommand(const string& cmd)
 {
 	if (!client_.send(cmd))
 	{
-		//TODO: показать сообщение "Обрыв соединения с сервером"
-		setScene(mainMenuScene);
+		onServerDisconnected();
 	}
 }
 
@@ -123,7 +122,6 @@ void Game::parseCommands()
 		}
 		else if (args[0] == CMD_ENEMY_DISCONNECTED)
 		{
-			//TODO: show message if enemy disconnected
 			setState(PlayState::EnemyDisconnected);
 		}
 		else if (args[0] == CMD_HIT)
@@ -168,6 +166,32 @@ void Game::parseCommands()
 		else
 			std::cout << "[error] Undefined command!\n";
 //	}
+}
+
+void Game::onServerDisconnected()
+{
+	showMessage(MessageType::Warning, "Обрыв соединения с сервером!");
+	setScene(mainMenuScene);
+}
+
+void Game::showMessage(MessageType type, string text)
+{
+	//TODO: отображать графическое сообщение
+	switch (type)
+	{
+		case MessageType::Error:
+			SDL_Log(("[error] " + text).c_str());
+			break;
+		case MessageType::Warning:
+			SDL_Log(("[warning] " + text).c_str());
+			break;
+		case MessageType::Info:
+			SDL_Log(("[info] " + text).c_str());
+			break;
+		default:	//MessageType::None
+			SDL_Log(text.c_str());
+			break;
+	}
 }
 
 bool Game::onInit()

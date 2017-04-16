@@ -18,6 +18,8 @@ int ReceiveThread::Process()
 		if (cmd != CMD_OK)
 			game_.pushCommand(cmd);
 	}
+	game_.onServerDisconnected();
+
 	return 0;
 }
 

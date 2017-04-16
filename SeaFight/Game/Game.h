@@ -16,7 +16,8 @@ class Scene;
 class Game: public SDLApplication
 {
 public:
-	enum PlayState { Connected, WaitEnemy, MyShot, EnemyShot, Win, Lose, EnemySurrender, EnemyDisconnected };
+	enum class PlayState { Connected, WaitEnemy, MyShot, EnemyShot, Win, Lose, EnemySurrender, EnemyDisconnected };
+	enum class MessageType { None, Error, Warning, Info };
 //	enum PlayState;
 
 	Game();
@@ -40,6 +41,8 @@ public:
 
 	void pushCommand(const string& cmd);
 	void parseCommands();
+	void onServerDisconnected();
+	void showMessage(MessageType type, string text);
 	
 	MainMenuScene mainMenuScene;
 	PlaceShipScene placeShipScene;

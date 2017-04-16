@@ -1,9 +1,11 @@
 #include "Game.h"
 #include <iostream>
-//#include <locale>
+#include <locale>
 
 int SDL_main( int argc, char* args[] )
 {
+	setlocale(LC_ALL, "Russian");
+
 	Game app;
 
 	if (app.init("SeaFight v0.3a бла бла бла", 640, 480))
